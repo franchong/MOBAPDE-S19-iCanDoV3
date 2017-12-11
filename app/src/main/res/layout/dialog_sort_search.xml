@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/dialog_sort_search"
+    android:padding="10dp"
+    android:gravity="center">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rb_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:background="@drawable/shape_sort"
+            android:textColor="#ffffff"
+            android:buttonTint="#ffffff"/>
+
+        <RadioButton
+            android:id="@+id/rb_priority"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Priority"
+            android:background="@drawable/shape_sort"
+            android:textColor="#ffffff"
+            android:buttonTint="#ffffff"/>
+
+        <RadioButton
+            android:id="@+id/rb_duedate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Due Date"
+            android:background="@drawable/shape_sort"
+            android:textColor="#ffffff"
+            android:buttonTint="#ffffff"/>
+
+        <RadioButton
+            android:id="@+id/rb_creationdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Creation Date"
+            android:background="@drawable/shape_sort"
+            android:textColor="#ffffff"
+            android:buttonTint="#ffffff"/>
+
+        <RadioButton
+            android:id="@+id/rb_ascending"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ascending"
+            android:background="@drawable/shape_sort"
+            android:textColor="#ffffff"
+            android:buttonTint="#ffffff"/>
+
+        <RadioButton
+            android:id="@+id/rb_descending"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Descending"
+            android:background="@drawable/shape_sort"
+            android:textColor="#ffffff"
+            android:buttonTint="#ffffff"/>
+
+        <RadioButton
+            android:id="@+id/rb_points"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Points"
+            android:background="@drawable/shape_sort"
+            android:textColor="#ffffff"
+            android:buttonTint="#ffffff"/>
+
+    </RadioGroup>
+
+</LinearLayout>

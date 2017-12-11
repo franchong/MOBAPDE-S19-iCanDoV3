@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_category_list"
+    android:id="@+id/activity_search"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -45,107 +45,64 @@
                 android:layout_marginTop="10dp" />
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/rl_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_alignBottom="@+id/rl_header"
             android:background="#283847"
-            android:layout_alignBottom="@+id/rl_header">
+            android:padding="15dp">
 
-            <LinearLayout
-                android:id="@+id/ll_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:paddingTop="6dp"
-                android:paddingBottom="5dp"
-                android:clickable="true"
-                android:background="@drawable/header_ripple">
+            <EditText
+                android:id="@+id/tv_search"
+                android:layout_width="280dp"
+                android:layout_height="40dp"
+                android:background="@drawable/shape_textbox"
+                android:gravity="center|left"
+                android:layout_centerVertical="true"
+                android:paddingLeft="33dp"
+                android:paddingRight="10dp"
+                android:inputType="text"
+                android:singleLine="true"
+                android:hint="Search..."
+                android:textSize="14dp"
+                android:textColor="#000000" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="@drawable/search"
-                    android:scaleType="fitCenter"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="4dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Search"
-                    android:textColor="#ffffff"
-                    android:layout_gravity="center"/>
-
-            </LinearLayout>
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/search_grey" />
 
             <LinearLayout
                 android:id="@+id/ll_sort"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:paddingTop="8dp"
-                android:paddingBottom="5dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/header_ripple"
                 android:clickable="true"
-                android:background="@drawable/header_ripple">
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <ImageView
                     android:layout_width="23dp"
                     android:layout_height="23dp"
-                    android:background="@drawable/sort"
-                    android:scaleType="fitCenter"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/sort"
+                    android:scaleType="fitCenter" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:text="Sort"
-                    android:textColor="#ffffff"
-                    android:layout_gravity="center"/>
+                    android:textColor="#ffffff" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_rewards"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:paddingTop="8dp"
-                android:paddingBottom="5dp"
-                android:clickable="true"
-                android:background="@drawable/header_ripple">
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="27dp"
-                    android:background="@drawable/reward"
-                    android:scaleType="fitCenter"
-                    android:layout_gravity="center"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rewards"
-                    android:textColor="#ffffff"
-                    android:layout_gravity="center"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="All Categories"
-            android:background="#1c2c3b"
-            android:textSize="23sp"
-            android:gravity="center"
-            android:textColor="#ffffff"
-            android:padding="11dp"/>
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -159,15 +116,14 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/rv_categories"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rv_rewards"
                     android:paddingBottom="60dp">
                 </android.support.v7.widget.RecyclerView>
 
             </ScrollView>
 
         </RelativeLayout>
-
 
     </LinearLayout>
 

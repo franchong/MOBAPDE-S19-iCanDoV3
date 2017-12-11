@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- An white rectangle ripple. -->
+<ripple
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#99d4d4d4"
+    >
+    <!-- background color uses a transparent mask set to full #ffffff (white) -->
+    <item
+        android:id="@android:id/mask"
+        android:drawable="@android:color/white" />
+</ripple>

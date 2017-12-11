@@ -49,8 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="#283847"
-            android:layout_alignBottom="@+id/rl_header">
+            android:layout_alignBottom="@+id/rl_header"
+            android:background="#283847">
 
             <LinearLayout
                 android:id="@+id/ll_search"
@@ -138,9 +138,10 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tv_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="All Categories"
+            android:text="Chores"
             android:background="#1c2c3b"
             android:textSize="23sp"
             android:gravity="center"
@@ -159,15 +160,14 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/rv_categories"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rv_tasks"
                     android:paddingBottom="60dp">
                 </android.support.v7.widget.RecyclerView>
 
             </ScrollView>
 
         </RelativeLayout>
-
 
     </LinearLayout>
 

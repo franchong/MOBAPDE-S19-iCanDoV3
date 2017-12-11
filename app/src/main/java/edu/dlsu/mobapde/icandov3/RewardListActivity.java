@@ -1,10 +1,5 @@
 package edu.dlsu.mobapde.icandov3;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
@@ -12,9 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -22,18 +15,17 @@ import com.github.clans.fab.FloatingActionMenu;
 
 import java.util.ArrayList;
 
-public class CategoryListActivity extends AppCompatActivity {
+public class RewardListActivity extends AppCompatActivity {
 
     ProgressBar pgLevel;
-    LinearLayout llSearch;
-    RecyclerView rvCategories;
+    RecyclerView rvRewards;
     FloatingActionMenu floatingActionMenu;
     FloatingActionButton fabCategory, fabTask, fabReward;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category_list);
+        setContentView(R.layout.activity_reward_list);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_gradient));
@@ -41,49 +33,29 @@ public class CategoryListActivity extends AppCompatActivity {
         pgLevel = findViewById(R.id.pg_bar);
         pgLevel.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#11ffb6")));
 
-        llSearch = findViewById(R.id.ll_search);
+        rvRewards = (RecyclerView) findViewById(R.id.rv_rewards);
 
-        llSearch.setOnClickListener(new View.OnClickListener() {
+        final ArrayList<Reward> rewards = new ArrayList<>();
+
+        rewards.add(new Reward(R.drawable.menu, "Relax", "Lorem ipsum dolor sit amet, consectur adipsicing elit", 25));
+
+        final RewardAdapter ra = new RewardAdapter(rewards);
+        ra.setOnItemClickListener(new RewardAdapter.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-                /*Intent i = new Intent();
-                i.setAction(Intent.ACTION_CALL);
-                i.setClass(getBaseContext(), SearchActivity.class);
-                startActivityForResult(i, 0);*/
-                /*ViewTaskMenu cd = new ViewTaskMenu();
-                cd.show(getFragmentManager(), "");*/
-            }
-        });
-
-        rvCategories = (RecyclerView) findViewById(R.id.rv_categories);
-
-        final ArrayList<Category> categories = new ArrayList<>();
-
-        categories.add(new Category(R.drawable.menu, "All Tasks", 20));
-        categories.add(new Category(R.drawable.menu, "Due Today", 5));
-        categories.add(new Category(R.drawable.menu, "Chores", 3));
-        categories.add(new Category(R.drawable.menu, "Academics", 20));
-        categories.add(new Category(R.drawable.menu, "Important", 5));
-        categories.add(new Category(R.drawable.menu, "Habits", 3));
-        categories.add(new Category(R.drawable.menu, "Outing", 20));
-
-        final CategoryAdapter ca = new CategoryAdapter(categories);
-        ca.setOnItemClickListener(new CategoryAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Category c) {
+            public void onItemClick(Reward r) {
 
             }
         });
-        rvCategories.setAdapter(ca);
+        rvRewards.setAdapter(ra);
 
-        rvCategories.setOnClickListener(new View.OnClickListener() {
+        rvRewards.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
 
-        rvCategories.setLayoutManager(new LinearLayoutManager(
+        rvRewards.setLayoutManager(new LinearLayoutManager(
                 getBaseContext(), LinearLayoutManager.VERTICAL, false
         ));
 
@@ -112,6 +84,5 @@ public class CategoryListActivity extends AppCompatActivity {
 
             }
         });
-
     }
 }

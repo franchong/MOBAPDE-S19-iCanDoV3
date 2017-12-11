@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/dialog_category"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tv_categoryname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Category Name"
+        android:textSize="19sp"
+        android:textColor="#1c2c3b"
+        android:paddingLeft="2dp"/>
+
+    <EditText
+        android:id="@+id/et_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:inputType="text"
+        android:singleLine="true"
+        android:maxLength="25"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="max characters: 25"
+        android:layout_gravity="right"
+        android:textColor="#7e7e7e"/>
+
+</LinearLayout>

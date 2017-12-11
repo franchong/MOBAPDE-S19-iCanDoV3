@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_category_list"
+    android:id="@+id/activity_reward_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -120,32 +120,23 @@
                 android:background="@drawable/header_ripple">
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="27dp"
-                    android:background="@drawable/reward"
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:background="@drawable/task"
                     android:scaleType="fitCenter"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="4dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rewards"
+                    android:text="Tasks"
                     android:textColor="#ffffff"
                     android:layout_gravity="center"/>
 
             </LinearLayout>
 
         </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="All Categories"
-            android:background="#1c2c3b"
-            android:textSize="23sp"
-            android:gravity="center"
-            android:textColor="#ffffff"
-            android:padding="11dp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -159,15 +150,14 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/rv_categories"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rv_rewards"
                     android:paddingBottom="60dp">
                 </android.support.v7.widget.RecyclerView>
 
             </ScrollView>
 
         </RelativeLayout>
-
 
     </LinearLayout>
 

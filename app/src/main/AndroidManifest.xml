@@ -16,6 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".TaskListActivity" />
+        <activity android:name=".AddEditTaskMenu" />
+        <activity android:name=".RewardListActivity" />
+        <activity android:name=".AddEditRewardMenu" />
+        <activity android:name=".SearchActivity" />
     </application>
 
 </manifest>
