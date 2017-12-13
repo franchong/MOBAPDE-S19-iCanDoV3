@@ -66,8 +66,8 @@
 
                 <ImageView
                     android:id="@+id/iv_recurring"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:background="@drawable/nonrecurring"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>

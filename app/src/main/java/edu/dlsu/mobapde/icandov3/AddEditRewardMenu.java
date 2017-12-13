@@ -37,9 +37,11 @@ public class AddEditRewardMenu extends AppCompatActivity {
                 if(ivRecurring.getTag() != null && ivRecurring.getTag().toString().equals("nonrecurring")){
                     ivRecurring.setImageResource(R.drawable.recurring);
                     ivRecurring.setTag("recurring");
+                    // add snackbar
                 } else {
                     ivRecurring.setImageResource(R.drawable.nonrecurring);
                     ivRecurring.setTag("nonrecurring");
+                    // add snackbar
                 }
 
             }

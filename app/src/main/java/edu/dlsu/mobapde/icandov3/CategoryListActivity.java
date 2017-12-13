@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class CategoryListActivity extends AppCompatActivity {
 
     ProgressBar pgLevel;
-    LinearLayout llSearch;
+    LinearLayout llSearch, llSort, llRewards;
     RecyclerView rvCategories;
     FloatingActionMenu floatingActionMenu;
     FloatingActionButton fabCategory, fabTask, fabReward;
@@ -46,12 +46,33 @@ public class CategoryListActivity extends AppCompatActivity {
         llSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent i = new Intent();
+                Intent i = new Intent();
                 i.setAction(Intent.ACTION_CALL);
                 i.setClass(getBaseContext(), SearchActivity.class);
-                startActivityForResult(i, 0);*/
+                startActivityForResult(i, 1);
                 /*ViewTaskMenu cd = new ViewTaskMenu();
                 cd.show(getFragmentManager(), "");*/
+            }
+        });
+
+        llSort = findViewById(R.id.ll_sort);
+
+        llSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SortDialog sd = new SortDialog();
+                sd.show(getFragmentManager(), "");
+            }
+        });
+
+        llRewards = findViewById(R.id.ll_rewards);
+        llRewards.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent();
+                i.setAction(Intent.ACTION_CALL);
+                i.setClass(getBaseContext(), RewardListActivity.class);
+                startActivityForResult(i, 2);
             }
         });
 
@@ -71,7 +92,10 @@ public class CategoryListActivity extends AppCompatActivity {
         ca.setOnItemClickListener(new CategoryAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Category c) {
-
+                Intent i = new Intent();
+                i.setAction(Intent.ACTION_CALL);
+                i.setClass(getBaseContext(), TaskListActivity.class);
+                startActivityForResult(i, 0);
             }
         });
         rvCategories.setAdapter(ca);
@@ -95,21 +119,28 @@ public class CategoryListActivity extends AppCompatActivity {
         fabCategory.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu first item clicked
-
+                CategoryDialog sd = new CategoryDialog();
+                sd.show(getFragmentManager(), "");
             }
         });
 
         fabTask.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
-
+                Intent i = new Intent();
+                i.setAction(Intent.ACTION_CALL);
+                i.setClass(getBaseContext(), AddEditTaskMenu.class);
+                startActivityForResult(i, 3);
             }
         });
 
         fabReward.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu third item clicked
-
+                Intent i = new Intent();
+                i.setAction(Intent.ACTION_CALL);
+                i.setClass(getBaseContext(), AddEditRewardMenu.class);
+                startActivityForResult(i, 4);
             }
         });
 

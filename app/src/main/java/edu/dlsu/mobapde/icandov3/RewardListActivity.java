@@ -1,5 +1,6 @@
 package edu.dlsu.mobapde.icandov3;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 public class RewardListActivity extends AppCompatActivity {
 
     ProgressBar pgLevel;
+    LinearLayout llSearch, llSort, llCategories;
     RecyclerView rvRewards;
     FloatingActionMenu floatingActionMenu;
     FloatingActionButton fabCategory, fabTask, fabReward;
@@ -33,6 +36,41 @@ public class RewardListActivity extends AppCompatActivity {
         pgLevel = findViewById(R.id.pg_bar);
         pgLevel.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#11ffb6")));
 
+        llSearch = findViewById(R.id.ll_search);
+
+        llSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent();
+                i.setAction(Intent.ACTION_CALL);
+                i.setClass(getBaseContext(), SearchActivity.class);
+                startActivityForResult(i, 1);
+                /*ViewTaskMenu cd = new ViewTaskMenu();
+                cd.show(getFragmentManager(), "");*/
+            }
+        });
+
+        llSort = findViewById(R.id.ll_sort);
+
+        llSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SortDialog sd = new SortDialog();
+                sd.show(getFragmentManager(), "");
+            }
+        });
+
+        llCategories = findViewById(R.id.ll_categories);
+        llCategories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent();
+                i.setAction(Intent.ACTION_CALL);
+                i.setClass(getBaseContext(), CategoryListActivity.class);
+                startActivityForResult(i, 2);
+            }
+        });
+
         rvRewards = (RecyclerView) findViewById(R.id.rv_rewards);
 
         final ArrayList<Reward> rewards = new ArrayList<>();
@@ -43,7 +81,8 @@ public class RewardListActivity extends AppCompatActivity {
         ra.setOnItemClickListener(new RewardAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Reward r) {
-
+                ViewRewardMenu sd = new ViewRewardMenu();
+                sd.show(getFragmentManager(), "");
             }
         });
         rvRewards.setAdapter(ra);

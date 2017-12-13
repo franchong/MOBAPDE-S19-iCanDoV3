@@ -16,63 +16,56 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Name"
-            android:background="@drawable/shape_sort"
-            android:textColor="#ffffff"
-            android:buttonTint="#ffffff"/>
+            android:textColor="#283847"
+            android:buttonTint="#283847"/>
 
         <RadioButton
             android:id="@+id/rb_priority"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Priority"
-            android:background="@drawable/shape_sort"
-            android:textColor="#ffffff"
-            android:buttonTint="#ffffff"/>
+            android:textColor="#283847"
+            android:buttonTint="#283847"/>
 
         <RadioButton
             android:id="@+id/rb_duedate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Due Date"
-            android:background="@drawable/shape_sort"
-            android:textColor="#ffffff"
-            android:buttonTint="#ffffff"/>
+            android:textColor="#283847"
+            android:buttonTint="#283847"/>
 
         <RadioButton
             android:id="@+id/rb_creationdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Creation Date"
-            android:background="@drawable/shape_sort"
-            android:textColor="#ffffff"
-            android:buttonTint="#ffffff"/>
+            android:textColor="#283847"
+            android:buttonTint="#283847"/>
 
         <RadioButton
             android:id="@+id/rb_ascending"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Ascending"
-            android:background="@drawable/shape_sort"
-            android:textColor="#ffffff"
-            android:buttonTint="#ffffff"/>
+            android:textColor="#283847"
+            android:buttonTint="#283847"/>
 
         <RadioButton
             android:id="@+id/rb_descending"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Descending"
-            android:background="@drawable/shape_sort"
-            android:textColor="#ffffff"
-            android:buttonTint="#ffffff"/>
+            android:textColor="#283847"
+            android:buttonTint="#283847"/>
 
         <RadioButton
             android:id="@+id/rb_points"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Points"
-            android:background="@drawable/shape_sort"
-            android:textColor="#ffffff"
-            android:buttonTint="#ffffff"/>
+            android:textColor="#283847"
+            android:buttonTint="#283847"/>
 
     </RadioGroup>
 

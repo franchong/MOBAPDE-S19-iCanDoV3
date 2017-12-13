@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
@@ -34,7 +35,10 @@ public class ViewTaskMenu extends DialogFragment {
                 .setNeutralButton("Edit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_CALL);
+                        intent.setClass(getActivity(), AddEditTaskMenu.class);
+                        startActivityForResult(intent, 1);
                         dismiss();
                     }
                 });
