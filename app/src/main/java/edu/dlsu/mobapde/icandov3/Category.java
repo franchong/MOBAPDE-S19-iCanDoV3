@@ -4,41 +4,44 @@ package edu.dlsu.mobapde.icandov3;
  * Created by Dell on 12/08/2017.
  */
 
-public class Category {
+    public class Category {
+        public static final String TABLE_NAME = "category";
+        public static final String COLUMN_ID = "_id";
+        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_NUMTASKS = "numTasks";
 
-    private int icon;
-    private String title;
-    private int numOfTasks;
+        private long id;
+        private String name;
+        private int numTasks;
+
+        public Category() {}
+        public Category(long id, String name) {
+            this.id = id;
+            this.name = name;
+        }
 
 
-    public Category(int icon, String title, int numOfTasks) {
-        this.icon = icon;
-        this.title = title;
-        this.numOfTasks = numOfTasks;
-    }
+        public long getId() {
+            return id;
+        }
 
-    public int getIcon() {
-        return icon;
-    }
+        public void setId(long id) {
+            this.id = id;
+        }
 
-    public void setIcon(int icon) {
-        this.icon = icon;
-    }
+        public String getName() {
+            return name;
+        }
 
-    public String getTitle() {
-        return title;
-    }
+        public void setName(String name) {
+            this.name = name;
+        }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+        public int getNumTasks() {
+            return numTasks;
+        }
 
-    public int getNumOfTasks() {
-        return numOfTasks;
-    }
-
-    public void setNumOfTasks(int numOfTasks) {
-        this.numOfTasks = numOfTasks;
-    }
-
+        public void setNumTasks(int numTasks) {
+            this.numTasks = numTasks;
+        }
 }

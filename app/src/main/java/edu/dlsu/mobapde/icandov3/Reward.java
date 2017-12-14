@@ -5,25 +5,43 @@ package edu.dlsu.mobapde.icandov3;
  */
 
 public class Reward {
+    public static final String TABLE_NAME = "reward";
+    public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_TITLE = "title";
+    public static final String COLUMN_DESC = "desc";
+    public static final String COLUMN_PRICE = "price";
+    public static final String COLUMN_RECURR = "recurr";
+    public static final String COLUMN_REPEATABLE= "repeatable";
 
-    private int icon;
+    private long id;
     String title;
     String description;
     int points;
+    private int price;
+    public boolean isRecurring;
+    public boolean isRepeatable;
+
+    public Reward(){}
 
     public Reward(int icon, String title, String description, int points) {
-        this.icon = icon;
         this.title = title;
         this.description = description;
         this.points = points;
+        this.price = price;
+        this.isRecurring = isRecurring;
+        this.isRepeatable = isRepeatable;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getIcon() {
         return icon;
-    }
-
-    public void setIcon(int icon) {
-        this.icon = icon;
     }
 
     public String getTitle() {
@@ -49,5 +67,27 @@ public class Reward {
     public void setPoints(int points) {
         this.points = points;
     }
+    public int getPrice() {
+        return price;
+    }
 
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public boolean isRepeatable() {
+        return isRepeatable;
+    }
+
+    public void setRepeatable(boolean repeatable) {
+        isRepeatable = repeatable;
+    }
+
+    public boolean isRecurring() {
+        return isRecurring;
+    }
+
+    public void setRecurring(boolean recurring) {
+        isRecurring = recurring;
+    }
 }

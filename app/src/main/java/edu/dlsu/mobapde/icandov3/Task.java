@@ -1,27 +1,40 @@
 package edu.dlsu.mobapde.icandov3;
 
+import java.util.Date;
+
 /**
  * Created by Dell on 12/08/2017.
  */
 
 public class Task {
 
+    public static final String TABLE_NAME = "task";
+    public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_TITLE = "title";
+    public static final String COLUMN_DESC = "desc";
+    public static final String COLUMN_DUEDATE = "duedate";
+    public static final String COLUMN_CREATIONDATE = "createdate";
+    public static final String COLUMN_RECURR = "recurr";
+    public static final String COLUMN_CAT = "category";
+
     private int icon;
+    private long id;
     private String title;
     private String description;
-    private String dueDate;
-    private String day;
-    private int daysLeft;
-    private boolean recurring;
+    private Date duedate;
+    private Date createdate;
+    private long categoryID;
+    public boolean isRecurr;
 
-    public Task(int icon, String title, String description, String dueDate, String day, int daysLeft, boolean recurring) {
-        this.icon = icon;
+    public Task () {}
+    public Task(long id, String title, String description, Date duedate, Date createdate, long categoryID, boolean isRecurr) {
+        this.id = id;
         this.title = title;
         this.description = description;
-        this.dueDate = dueDate;
-        this.day = day;
-        this.daysLeft = daysLeft;
-        this.recurring = recurring;
+        this.duedate = duedate;
+        this.createdate = createdate;
+        this.categoryID = categoryID;
+        this.isRecurr = isRecurr;
     }
 
     public int getIcon() {
@@ -30,6 +43,14 @@ public class Task {
 
     public void setIcon(int icon) {
         this.icon = icon;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -48,35 +69,40 @@ public class Task {
         this.description = description;
     }
 
-    public String getDueDate() {
-        return dueDate;
+    public Date getDuedate() {
+        return duedate;
     }
 
-    public void setDueDate(String dueDate) {
-        this.dueDate = dueDate;
+    public void setDuedate(Date duedate) {
+        this.duedate = duedate;
     }
 
-    public String getDay() {
-        return day;
+    public Date getCreatedate() {
+        return createdate;
     }
 
-    public void setDay(String day) {
-        this.day = day;
+    public void setCreatedate(Date createdate) {
+        this.createdate = createdate;
     }
 
-    public int getDaysLeft() {
-        return daysLeft;
+    public long getCategoryID() {
+        return categoryID;
     }
 
-    public void setDaysLeft(int daysLeft) {
-        this.daysLeft = daysLeft;
+    public void setCategoryID(long categoryID)
+    {
+        this.categoryID = categoryID;
     }
 
-    public boolean isRecurring() {
-        return recurring;
+    public boolean isRecurr() {
+        return isRecurr;
     }
 
-    public void setRecurring(boolean recurring) {
-        this.recurring = recurring;
+    public void setRecurr(boolean recurr) {
+        isRecurr = recurr;
     }
+
+
+
+
 }
