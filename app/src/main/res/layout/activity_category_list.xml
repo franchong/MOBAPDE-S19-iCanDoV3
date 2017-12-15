@@ -81,34 +81,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_sort"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:paddingTop="8dp"
-                android:paddingBottom="5dp"
-                android:clickable="true"
-                android:background="@drawable/header_ripple">
-
-                <ImageView
-                    android:layout_width="23dp"
-                    android:layout_height="23dp"
-                    android:background="@drawable/sort"
-                    android:scaleType="fitCenter"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="4dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Sort"
-                    android:textColor="#ffffff"
-                    android:layout_gravity="center"/>
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/ll_rewards"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -121,7 +93,7 @@
 
                 <ImageView
                     android:layout_width="28dp"
-                    android:layout_height="27dp"
+                    android:layout_height="28dp"
                     android:background="@drawable/reward"
                     android:scaleType="fitCenter"
                     android:layout_gravity="center"/>
@@ -141,11 +113,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="All Categories"
-            android:background="#1c2c3b"
+            android:background="@drawable/shape_title"
             android:textSize="23sp"
             android:gravity="center"
             android:textColor="#ffffff"
-            android:padding="11dp"/>
+            android:padding="11dp"
+            android:elevation="5dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"

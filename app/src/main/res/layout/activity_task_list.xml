@@ -64,12 +64,12 @@
                 android:background="@drawable/header_ripple">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:background="@drawable/search"
                     android:scaleType="fitCenter"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_marginBottom="1dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -121,7 +121,7 @@
 
                 <ImageView
                     android:layout_width="28dp"
-                    android:layout_height="27dp"
+                    android:layout_height="28dp"
                     android:background="@drawable/reward"
                     android:scaleType="fitCenter"
                     android:layout_gravity="center"/>
@@ -142,11 +142,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Chores"
-            android:background="#1c2c3b"
+            android:background="@drawable/shape_title"
             android:textSize="23sp"
             android:gravity="center"
             android:textColor="#ffffff"
-            android:padding="11dp"/>
+            android:padding="11dp"
+            android:elevation="5dp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
