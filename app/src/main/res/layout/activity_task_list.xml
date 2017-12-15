@@ -49,12 +49,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_alignBottom="@+id/rl_header"
-            android:background="#283847">
+            android:background="#283847"
+            android:layout_alignBottom="@+id/rl_header">
 
             <LinearLayout
                 android:id="@+id/ll_search"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_weight="1"
@@ -64,12 +64,12 @@
                 android:background="@drawable/header_ripple">
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:background="@drawable/search"
                     android:scaleType="fitCenter"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="1dp"/>
+                    android:layout_marginBottom="4dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -82,7 +82,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_sort"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_weight="1"
@@ -110,7 +110,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_rewards"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_weight="1"
@@ -120,11 +120,12 @@
                 android:background="@drawable/header_ripple">
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
                     android:background="@drawable/reward"
                     android:scaleType="fitCenter"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="4dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
