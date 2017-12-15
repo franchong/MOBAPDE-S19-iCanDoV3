@@ -29,6 +29,8 @@ public class ViewTaskMenu extends DialogFragment {
         View v = LayoutInflater.from(getActivity())
                 .inflate(R.layout.dialog_view_task_menu, null);
 
+        final DatabaseHelper db = new DatabaseHelper(v.getContext());
+
         tvTaskName = (TextView) v.findViewById(R.id.tv_taskname);
         tvDaysLeft = (TextView) v.findViewById(R.id.tv_daysleft);
         tvDay = (TextView) v.findViewById(R.id.tv_day);
@@ -56,7 +58,7 @@ public class ViewTaskMenu extends DialogFragment {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            Date startDateValue = Calendar.getInstance().getTime();
+            final Date startDateValue = Calendar.getInstance().getTime();
             long diff = endDateValue.getTime() - startDateValue.getTime();
             int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
             tvDaysLeft.setText(days);
@@ -83,6 +85,20 @@ public class ViewTaskMenu extends DialogFragment {
                 .setPositiveButton("Complete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        if (isRecurr) {
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(Calendar.getInstance().getTime());
+                            cal.add(Calendar.DAY_OF_YEAR, 1);
+                            Date dueDate = cal.getTime();
+                            Task t = new Task(0, title, description, dueDate, Calendar.getInstance().getTime(),
+                                    0, isRecurr);
+                            db.addTask(t);
+                            db.deleteTask(id);
+                            //TODO how to notify/update adapter
+                        }
+                        else {
+                            db.deleteTask(id);
+                        }
 
                         dismiss();
                     }
@@ -103,6 +119,12 @@ public class ViewTaskMenu extends DialogFragment {
                         intent.putExtra(Task.COLUMN_RECURR, isRecurr);
                         startActivityForResult(intent, 8);
                         //TODO concern for activities transition, might need onActivityResult
+                    }
+                })
+                .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        db.deleteTask(id);
                     }
                 });
 

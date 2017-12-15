@@ -63,8 +63,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ");";
         sqLiteDatabase.execSQL(sql);
 
-
-
+        //TODO Add and clarify points system
+        sql = "CREATE TABLE " + "GAME" + " ("
+                + "POINTS" + " INTEGER,"
+                + ");";
+        sqLiteDatabase.execSQL(sql);
 
         //TODO These are samples
         addCategory(new Category(0, "Category"));
@@ -103,6 +106,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(sql);
 
         sql = "DROP TABLE IF EXISTS " + Reward.TABLE_NAME + ";";
+        sqLiteDatabase.execSQL(sql);
+
+        sql = "DROP TABLE IF EXISTS " + "GAME" + ";";
         sqLiteDatabase.execSQL(sql);
 
         // call onCreate
@@ -159,7 +165,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return id;
     }
-
 
     //editTask
     public boolean editTask(Task newtask, long currentId){
