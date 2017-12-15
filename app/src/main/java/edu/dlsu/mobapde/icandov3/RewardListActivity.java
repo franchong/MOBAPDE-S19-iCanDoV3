@@ -131,4 +131,25 @@ public class RewardListActivity extends AppCompatActivity {
             }
         });
     }
+
+    //TODO update database and add snackbar notification
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 3 && resultCode == RESULT_OK) {
+
+        }
+        if (requestCode == 3 && resultCode == RESULT_CANCELED) {
+
+        }
+
+        if(requestCode == 4 && resultCode == RESULT_OK) {
+
+        }
+        if (requestCode == 4 && resultCode == RESULT_CANCELED) {
+
+        }
+
+    }
 }

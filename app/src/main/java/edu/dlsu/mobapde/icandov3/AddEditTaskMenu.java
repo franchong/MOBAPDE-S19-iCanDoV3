@@ -1,20 +1,20 @@
 package edu.dlsu.mobapde.icandov3;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -23,6 +23,8 @@ public class AddEditTaskMenu extends AppCompatActivity {
     ProgressBar pgLevel;
     TextView tvDate;
     ImageView ivRecurring, ivDate;
+    Button btnCancel, btnSave;
+    EditText etName, etDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,10 @@ public class AddEditTaskMenu extends AppCompatActivity {
         tvDate = (TextView) findViewById(R.id.tv_date);
         ivRecurring = (ImageView) findViewById(R.id.iv_recurring);
         ivDate = (ImageView) findViewById(R.id.iv_date);
+        btnCancel = (Button) findViewById(R.id.button_cancel);
+        btnSave = (Button) findViewById(R.id.button_save);
+        etName = (EditText) findViewById(R.id.et_name);
+        etDescription = (EditText) findViewById(R.id.et_description);
 
         Calendar c = Calendar.getInstance();
         final int y = c.get(Calendar.YEAR);
@@ -112,10 +118,46 @@ public class AddEditTaskMenu extends AppCompatActivity {
                     Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Reward is set to nonrecurring.", Snackbar.LENGTH_SHORT);
                     snackbar.show();
                 }
-
             }
 
         });
 
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
+        });
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent data = new Intent();
+
+                String name = etName.getText().toString().trim();
+                String description = etDescription.getText().toString().trim();
+                String date = tvDate.getText().toString().trim();
+                boolean recurring = false;
+
+                if (ivRecurring.getTag().toString().equals("nonrecurring")) {
+                    recurring = false;
+                }
+                else if (ivRecurring.getTag().toString().equals("recurring")) {
+                    recurring = true;
+                }
+
+                data.putExtra(Task.COLUMN_TITLE, name);
+                data.putExtra(Task.COLUMN_DESC, description);
+                data.putExtra(Task.COLUMN_DUEDATE, date);
+                data.putExtra(Task.COLUMN_RECURR, recurring);
+
+                setResult(RESULT_OK, data);
+                finish();
+            }
+        });
+
     }
+
+
 }

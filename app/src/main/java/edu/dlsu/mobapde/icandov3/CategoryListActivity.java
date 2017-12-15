@@ -1,18 +1,13 @@
 package edu.dlsu.mobapde.icandov3;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -133,6 +128,27 @@ public class CategoryListActivity extends AppCompatActivity {
                 startActivityForResult(i, 4);
             }
         });
+
+    }
+
+    //TODO update database and add snackbar notification
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 3 && resultCode == RESULT_OK) {
+
+        }
+        if (requestCode == 3 && resultCode == RESULT_CANCELED) {
+
+        }
+
+        if(requestCode == 4 && resultCode == RESULT_OK) {
+
+        }
+        if (requestCode == 4 && resultCode == RESULT_CANCELED) {
+
+        }
 
     }
 }

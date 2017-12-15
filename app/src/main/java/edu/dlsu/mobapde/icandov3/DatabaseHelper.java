@@ -13,7 +13,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.locks.ReadWriteLock;
 
 /**
  * Created by G301 on 11/7/2017.
@@ -64,6 +63,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ");";
         sqLiteDatabase.execSQL(sql);
 
+
+
+
+        //TODO These are samples
+        addCategory(new Category(0, "Category"));
+        addTask(new Task(
+                0,
+                "Task0",
+                "description",
+                new Date(1,1,1),
+                new Date(1,1,1),
+                0,
+                true));
+        addTask(new Task(
+                1,
+                "Task1",
+                "description",
+                new Date(1,1,1),
+                new Date(1,1,1),
+                0,
+                true));
+
+
     }
 
     @Override
@@ -88,7 +110,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // add Task
-    public long addTask(Task task, SQLiteDatabase db){
+    public long addTask(Task task){
+        SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(Task.COLUMN_TITLE, task.getTitle());
@@ -106,7 +129,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // add Category
-    public long addCategory(Category category, SQLiteDatabase db){
+    public long addCategory(Category category){
+        SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(Category.COLUMN_NAME, category.getName());
@@ -119,7 +143,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public long addReward(Reward rewards, SQLiteDatabase db){
+    public long addReward(Reward rewards){
+        SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(Reward.COLUMN_TITLE, rewards.getTitle());
@@ -136,7 +161,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    // editKorean
+    //editTask
     public boolean editTask(Task newtask, int currentId){
         SQLiteDatabase db = getWritableDatabase();
 
@@ -324,5 +349,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // getAllReward
     public Cursor getAllRewardCursor(String PRIORITY, String SORT){
         return getReadableDatabase().query(Reward.TABLE_NAME, null,null,null,null,null,PRIORITY +" " +SORT);
+    }
+
+    public Cursor getAllTasksCursor(){
+        return getReadableDatabase().query(Task.TABLE_NAME, null,null,null,null,null,null);
+    }
+
+    public Cursor getAllCategoriesCursor(){
+        return getReadableDatabase().query(Category.TABLE_NAME, null,null,null,null,null,null);
+    }
+
+    public Cursor getAllRewardCursor(){
+        return getReadableDatabase().query(Reward.TABLE_NAME, null,null,null,null,null,null);
     }
 }

@@ -26,7 +26,8 @@ public class Task {
     private long categoryID;
     public boolean isRecurr;
 
-    public Task () {}
+    public Task() {}
+
     public Task(long id, String title, String description, Date duedate, Date createdate, long categoryID, boolean isRecurr) {
         this.id = id;
         this.title = title;

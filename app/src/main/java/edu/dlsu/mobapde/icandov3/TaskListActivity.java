@@ -6,21 +6,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class TaskListActivity extends AppCompatActivity {
 
@@ -29,11 +32,14 @@ public class TaskListActivity extends AppCompatActivity {
     RecyclerView rvTasks;
     FloatingActionMenu floatingActionMenu;
     FloatingActionButton fabCategory, fabTask, fabReward;
+    DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_list);
+
+        db = new DatabaseHelper(getBaseContext());
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_gradient));
@@ -80,11 +86,9 @@ public class TaskListActivity extends AppCompatActivity {
 
         final ArrayList<Task> tasks = new ArrayList<>();
 
-        //tasks.add(new Task(R.drawable.menu,"Laundry", "Lorem ipsum dolor sit amet, consectur adipsicing elit", "12-14-17", "H", 3, true));
-        //tasks.add(new Task(R.drawable.menu,"Mop", "Lorem ipsum dolor sit amet, consectur adipsicing elit", "12-14-17", "H", 3, true));
-        //tasks.add(new Task(R.drawable.menu,"Sweep", "Lorem ipsum dolor sit amet, consectur adipsicing elit", "12-14-17", "H", 3, true));
 
-        final TaskAdapter ta = new TaskAdapter(tasks);
+
+        final TaskAdapter ta = new TaskAdapter(getBaseContext(), db.getAllTasksCursor());
         ta.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Task t) {
@@ -193,5 +197,45 @@ public class TaskListActivity extends AppCompatActivity {
                 startActivityForResult(i, 9);
             }
         });
+    }
+
+    //TODO update database and add snackbar notification
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        RecyclerView.Adapter adapter = rvTasks.getAdapter();
+
+        if(requestCode == 3 && resultCode == RESULT_OK) {
+
+            String title = data.getExtras().getString(Task.COLUMN_TITLE);
+            String desc = data.getExtras().getString(Task.COLUMN_DESC);
+            Date creatDate = Calendar.getInstance().getTime();
+
+            String strDueDate = data.getExtras().getString(Task.COLUMN_DUEDATE);
+            Date dueDate = null;
+            SimpleDateFormat df = new SimpleDateFormat("MM-dd-yy");
+            try {
+                dueDate = df.parse(strDueDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            boolean recurr = data.getExtras().getBoolean(Task.COLUMN_RECURR);
+
+            //TODO interface: add a category selection option, then add category to Task
+            //TODO long ID and Category ID
+            Task task = new Task(0, title, desc, dueDate, creatDate, 0, recurr);
+            db.addTask(task);
+
+            //TODO does this notify/update the recycler view?
+            adapter.notifyItemInserted(adapter.getItemCount()-1);
+
+            //TODO snackbar https://developer.android.com/training/snackbar/action.html
+        }
+
+        if(requestCode == 4 && resultCode == RESULT_OK) {
+
+        }
+
     }
 }
