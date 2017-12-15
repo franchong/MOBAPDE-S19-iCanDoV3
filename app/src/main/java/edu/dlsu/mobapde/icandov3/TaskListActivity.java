@@ -92,7 +92,24 @@ public class TaskListActivity extends AppCompatActivity {
         ta.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Task t) {
+
+                //TODO parsing date might cause error
+                Bundle bundle = new Bundle();
+                bundle.putString(Task.COLUMN_TITLE, t.getTitle());
+                bundle.putString(Task.COLUMN_DESC, t.getDescription());
+                SimpleDateFormat df = new SimpleDateFormat("MM-dd-yy");
+                String strDueDate = df.format(t.getDuedate());
+                String strCreateDate = df.format(t.getCreatedate());
+
+                bundle.putString(Task.COLUMN_CREATIONDATE, strCreateDate);
+                bundle.putString(Task.COLUMN_DUEDATE, strDueDate);
+                bundle.putLong(Task.COLUMN_CAT, t.getCategoryID());
+                bundle.putLong(Task.COLUMN_ID, t.getId());
+                bundle.putBoolean(Task.COLUMN_RECURR, t.isRecurr());
+
                 ViewTaskMenu sd = new ViewTaskMenu();
+                sd.setArguments(bundle);
+
                 sd.show(getFragmentManager(), "");
             }
         });
@@ -220,6 +237,7 @@ public class TaskListActivity extends AppCompatActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+
             boolean recurr = data.getExtras().getBoolean(Task.COLUMN_RECURR);
 
             //TODO interface: add a category selection option, then add category to Task

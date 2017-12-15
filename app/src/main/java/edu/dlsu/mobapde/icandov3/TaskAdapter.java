@@ -1,7 +1,6 @@
 package edu.dlsu.mobapde.icandov3;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -20,12 +21,8 @@ import java.util.concurrent.TimeUnit;
 
 public class TaskAdapter extends CursorRecyclerViewAdapter<TaskAdapter.TaskViewHolder> {
 
-    //TODO context1 unsure of the way its used: for starting an intent
-    public Context context1;
-
     public TaskAdapter(Context context, Cursor cursor) {
         super(context, cursor);
-        context1 = context;
     }
 
     @Override
@@ -49,10 +46,15 @@ public class TaskAdapter extends CursorRecyclerViewAdapter<TaskAdapter.TaskViewH
 
     @Override
     public void onBindViewHolder(TaskViewHolder viewHolder, final Cursor cursor) {
-        //TODO what comes out of here?
-        //TODO retrieve Date value, calculate Days left, then setText
-        String endDate = cursor.getString(cursor.getColumnIndex(Task.COLUMN_DUEDATE));
-        Date endDateValue = new Date();
+        //TODO unsure Date data
+        Date endDateValue = null;
+        String strEndDate = cursor.getString(cursor.getColumnIndex(Task.COLUMN_DUEDATE));
+        SimpleDateFormat df = new SimpleDateFormat("MM-dd-yy");
+        try {
+            endDateValue = df.parse(strEndDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         Date startDateValue = Calendar.getInstance().getTime();
         long diff = endDateValue.getTime() - startDateValue.getTime();
         int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
@@ -66,19 +68,18 @@ public class TaskAdapter extends CursorRecyclerViewAdapter<TaskAdapter.TaskViewH
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent();
-                i.setAction(Intent.ACTION_CALL);
-                i.setClass(context1, ViewTaskMenu.class);
-                i.putExtra(Task.COLUMN_TITLE, cursor.getColumnIndex(Task.COLUMN_TITLE));
-                i.putExtra(Task.COLUMN_DESC, cursor.getColumnIndex(Task.COLUMN_DESC));
-                i.putExtra(Task.COLUMN_CREATIONDATE, cursor.getColumnIndex(Task.COLUMN_CREATIONDATE));
-                i.putExtra(Task.COLUMN_DUEDATE, cursor.getColumnIndex(Task.COLUMN_DUEDATE));
-                i.putExtra(Task.COLUMN_RECURR, cursor.getColumnIndex(Task.COLUMN_RECURR));
-                i.putExtra(Task.COLUMN_CAT, cursor.getColumnIndex(Task.COLUMN_CAT));
-                i.putExtra(Task.COLUMN_ID, cursor.getColumnIndex(Task.COLUMN_ID));
-                //TODO for starting an intent
-                //startActivity(context1, i);
-
+//TODO not good intent
+                //                Intent i = new Intent();
+//                i.setAction(Intent.ACTION_CALL);
+//                i.setClass(v.getContext(), ViewTaskMenu.class);
+//                i.putExtra(Task.COLUMN_TITLE, cursor.getColumnIndex(Task.COLUMN_TITLE));
+//                i.putExtra(Task.COLUMN_DESC, cursor.getColumnIndex(Task.COLUMN_DESC));
+//                i.putExtra(Task.COLUMN_CREATIONDATE, cursor.getColumnIndex(Task.COLUMN_CREATIONDATE));
+//                i.putExtra(Task.COLUMN_DUEDATE, cursor.getColumnIndex(Task.COLUMN_DUEDATE));
+//                i.putExtra(Task.COLUMN_RECURR, cursor.getColumnIndex(Task.COLUMN_RECURR));
+//                i.putExtra(Task.COLUMN_CAT, cursor.getColumnIndex(Task.COLUMN_CAT));
+//                i.putExtra(Task.COLUMN_ID, cursor.getColumnIndex(Task.COLUMN_ID));
+//                v.getContext().startActivity(i);
             }
         });
 

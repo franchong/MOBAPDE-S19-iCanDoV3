@@ -20,10 +20,11 @@
             android:textColor="#1c2c3b" />
 
         <ImageView
+            android:id="@+id/ivRecurr"
             android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:background="@drawable/recurring"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:background="@drawable/recurring" />
 
     </RelativeLayout>
 
