@@ -37,13 +37,31 @@ public class AddEditTaskMenu extends AppCompatActivity {
         pgLevel = findViewById(R.id.pg_bar);
         pgLevel.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#11ffb6")));
 
-        tvDate = (TextView) findViewById(R.id.tv_date);
-        ivRecurring = (ImageView) findViewById(R.id.iv_recurring);
         ivDate = (ImageView) findViewById(R.id.iv_date);
         btnCancel = (Button) findViewById(R.id.button_cancel);
         btnSave = (Button) findViewById(R.id.button_save);
+
+        ivRecurring = (ImageView) findViewById(R.id.iv_recurring);
+        tvDate = (TextView) findViewById(R.id.tv_date);
         etName = (EditText) findViewById(R.id.et_name);
         etDescription = (EditText) findViewById(R.id.et_description);
+
+        boolean isEdit = getIntent().getBooleanExtra("isEdit", false);
+
+        if (isEdit) {
+            boolean isRecurr = getIntent().getBooleanExtra(Task.COLUMN_RECURR, false);
+            tvDate.setText(getIntent().getStringExtra(Task.COLUMN_DUEDATE));
+            etName.setText(getIntent().getStringExtra(Task.COLUMN_TITLE));
+            etDescription.setText(getIntent().getStringExtra(Task.COLUMN_DESC));
+
+            if (isRecurr) {
+                ivRecurring.setImageResource(R.drawable.recurring);
+            }
+            else {
+                ivRecurring.setImageResource(R.drawable.nonrecurring);
+            }
+        }
+
 
         Calendar c = Calendar.getInstance();
         final int y = c.get(Calendar.YEAR);
@@ -147,10 +165,12 @@ public class AddEditTaskMenu extends AppCompatActivity {
                     recurring = true;
                 }
 
+                data.putExtra(Task.COLUMN_ID, getIntent().getLongExtra(Task.COLUMN_ID, 0));
                 data.putExtra(Task.COLUMN_TITLE, name);
                 data.putExtra(Task.COLUMN_DESC, description);
                 data.putExtra(Task.COLUMN_DUEDATE, date);
                 data.putExtra(Task.COLUMN_RECURR, recurring);
+                data.putExtra("isEdit", true);
 
                 setResult(RESULT_OK, data);
                 finish();

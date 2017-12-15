@@ -201,6 +201,7 @@ public class TaskListActivity extends AppCompatActivity {
                 Intent i = new Intent();
                 i.setAction(Intent.ACTION_CALL);
                 i.setClass(getBaseContext(), AddEditTaskMenu.class);
+                i.putExtra("isEdit", false);
                 startActivityForResult(i, 8);
             }
         });
@@ -225,9 +226,11 @@ public class TaskListActivity extends AppCompatActivity {
 
         if(requestCode == 3 && resultCode == RESULT_OK) {
 
+            boolean isEdit = getIntent().getBooleanExtra("isEdit", false);
+
             String title = data.getExtras().getString(Task.COLUMN_TITLE);
             String desc = data.getExtras().getString(Task.COLUMN_DESC);
-            Date creatDate = Calendar.getInstance().getTime();
+            Date createDate = Calendar.getInstance().getTime();
 
             String strDueDate = data.getExtras().getString(Task.COLUMN_DUEDATE);
             Date dueDate = null;
@@ -242,13 +245,20 @@ public class TaskListActivity extends AppCompatActivity {
 
             //TODO interface: add a category selection option, then add category to Task
             //TODO long ID and Category ID
-            Task task = new Task(0, title, desc, dueDate, creatDate, 0, recurr);
-            db.addTask(task);
+            Task task = new Task(0, title, desc, dueDate, createDate, 0, recurr);
 
-            //TODO does this notify/update the recycler view?
-            adapter.notifyItemInserted(adapter.getItemCount()-1);
+            if (isEdit) {
+                db.editTask(task, getIntent().getLongExtra(Task.COLUMN_ID, 0));
+                //TODO does this notify/update the recycler view?
+                adapter.notifyDataSetChanged();
+            }
+            else {
+                db.addTask(task);
+                //TODO does this notify/update the recycler view?
+                adapter.notifyItemInserted(adapter.getItemCount() - 1);
+            }
+            //TODO snackbar to show user it has been added: https://developer.android.com/training/snackbar/action.html
 
-            //TODO snackbar https://developer.android.com/training/snackbar/action.html
         }
 
         if(requestCode == 4 && resultCode == RESULT_OK) {

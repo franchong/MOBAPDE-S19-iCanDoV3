@@ -45,7 +45,7 @@ public class TaskAdapter extends CursorRecyclerViewAdapter<TaskAdapter.TaskViewH
     }
 
     @Override
-    public void onBindViewHolder(TaskViewHolder viewHolder, final Cursor cursor) {
+    public void onBindViewHolder(final TaskViewHolder viewHolder, final Cursor cursor) {
         //TODO unsure Date data
         Date endDateValue = null;
         String strEndDate = cursor.getString(cursor.getColumnIndex(Task.COLUMN_DUEDATE));
@@ -68,18 +68,7 @@ public class TaskAdapter extends CursorRecyclerViewAdapter<TaskAdapter.TaskViewH
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//TODO not good intent
-                //                Intent i = new Intent();
-//                i.setAction(Intent.ACTION_CALL);
-//                i.setClass(v.getContext(), ViewTaskMenu.class);
-//                i.putExtra(Task.COLUMN_TITLE, cursor.getColumnIndex(Task.COLUMN_TITLE));
-//                i.putExtra(Task.COLUMN_DESC, cursor.getColumnIndex(Task.COLUMN_DESC));
-//                i.putExtra(Task.COLUMN_CREATIONDATE, cursor.getColumnIndex(Task.COLUMN_CREATIONDATE));
-//                i.putExtra(Task.COLUMN_DUEDATE, cursor.getColumnIndex(Task.COLUMN_DUEDATE));
-//                i.putExtra(Task.COLUMN_RECURR, cursor.getColumnIndex(Task.COLUMN_RECURR));
-//                i.putExtra(Task.COLUMN_CAT, cursor.getColumnIndex(Task.COLUMN_CAT));
-//                i.putExtra(Task.COLUMN_ID, cursor.getColumnIndex(Task.COLUMN_ID));
-//                v.getContext().startActivity(i);
+                notifyItemChanged(viewHolder.getAdapterPosition());
             }
         });
 

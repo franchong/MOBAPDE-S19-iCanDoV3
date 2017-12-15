@@ -117,6 +117,7 @@ public class RewardListActivity extends AppCompatActivity {
                 Intent i = new Intent();
                 i.setAction(Intent.ACTION_CALL);
                 i.setClass(getBaseContext(), AddEditTaskMenu.class);
+                i.putExtra("isEdit", false);
                 startActivityForResult(i, 10);
             }
         });

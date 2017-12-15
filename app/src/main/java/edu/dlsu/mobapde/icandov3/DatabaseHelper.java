@@ -162,7 +162,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     //editTask
-    public boolean editTask(Task newtask, int currentId){
+    public boolean editTask(Task newtask, long currentId){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();

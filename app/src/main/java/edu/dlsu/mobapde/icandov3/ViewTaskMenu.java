@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ViewTaskMenu extends DialogFragment {
 
-    ImageView ivCurr;
+    ImageView ivRecurr;
     TextView tvTaskName, tvDaysLeft, tvDuedate, tvDay, tvDescription;
 
     @NonNull
@@ -34,16 +34,17 @@ public class ViewTaskMenu extends DialogFragment {
         tvDay = (TextView) v.findViewById(R.id.tv_day);
         tvDuedate = (TextView) v.findViewById(R.id.tv_duedate);
         tvDescription = (TextView) v.findViewById(R.id.tv_description);
+        ivRecurr = (ImageView) v.findViewById(R.id.ivRecurr) ;
 
         Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            long id = bundle.getLong(Task.COLUMN_ID);
-            String title = bundle.getString(Task.COLUMN_TITLE);
-            String description = bundle.getString(Task.COLUMN_DESC);
-            String strDuedate = bundle.getString(Task.COLUMN_DUEDATE);
-            String strCreatedate = bundle.getString(Task.COLUMN_CREATIONDATE);
-            long categoryID = bundle.getLong(Task.COLUMN_CAT);
-            boolean isRecurr = bundle.getBoolean(Task.COLUMN_RECURR);
+        //if (bundle != null) {
+            final long id = bundle.getLong(Task.COLUMN_ID);
+            final String title = bundle.getString(Task.COLUMN_TITLE);
+            final String description = bundle.getString(Task.COLUMN_DESC);
+            final String strDuedate = bundle.getString(Task.COLUMN_DUEDATE);
+            final String strCreatedate = bundle.getString(Task.COLUMN_CREATIONDATE);
+            final long categoryID = bundle.getLong(Task.COLUMN_CAT);
+            final boolean isRecurr = bundle.getBoolean(Task.COLUMN_RECURR);
 
             tvTaskName.setText(title);
 
@@ -67,8 +68,15 @@ public class ViewTaskMenu extends DialogFragment {
             tvDuedate.setText(strDuedate);
 
             tvDescription.setText(description);
-        }
-        
+
+            if (!isRecurr) {
+                ivRecurr.setImageResource(android.R.color.transparent);
+            }
+            else if (isRecurr) {
+                ivRecurr.setImageResource(R.drawable.recurring);
+            }
+        //}
+
         AlertDialog.Builder builder
                 = new AlertDialog.Builder(getActivity())
                 .setView(v)
@@ -85,8 +93,16 @@ public class ViewTaskMenu extends DialogFragment {
                         Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_CALL);
                         intent.setClass(getActivity(), AddEditTaskMenu.class);
-                        startActivityForResult(intent, 1);
-                        dismiss();
+                        intent.putExtra("isEdit", true);
+                        intent.putExtra(Task.COLUMN_ID, id);
+                        intent.putExtra(Task.COLUMN_TITLE, title);
+                        intent.putExtra(Task.COLUMN_DESC, description);
+                        intent.putExtra(Task.COLUMN_DUEDATE, strDuedate);
+                        intent.putExtra(Task.COLUMN_CREATIONDATE, strCreatedate);
+                        intent.putExtra(Task.COLUMN_CAT, categoryID);
+                        intent.putExtra(Task.COLUMN_RECURR, isRecurr);
+                        startActivityForResult(intent, 8);
+                        //TODO concern for activities transition, might need onActivityResult
                     }
                 });
 
