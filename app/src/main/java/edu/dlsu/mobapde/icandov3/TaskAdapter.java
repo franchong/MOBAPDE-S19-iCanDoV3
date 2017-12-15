@@ -33,7 +33,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         final Task currentTask = data.get(position);
         holder.ivMenu.setImageResource(currentTask.getIcon());
         holder.tvLeft.setText(currentTask.getTitle());
-        holder.tvRight.setText(currentTask.getDaysLeft() + " days left");
+        holder.tvRight.setText(" days left");
 
         holder.itemView.setTag(currentTask);
 

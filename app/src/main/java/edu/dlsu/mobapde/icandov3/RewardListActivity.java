@@ -55,7 +55,7 @@ public class RewardListActivity extends AppCompatActivity {
         llSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SortDialog sd = new SortDialog();
+                SortRewardsDialog sd = new SortRewardsDialog();
                 sd.show(getFragmentManager(), "");
             }
         });
@@ -75,7 +75,7 @@ public class RewardListActivity extends AppCompatActivity {
 
         final ArrayList<Reward> rewards = new ArrayList<>();
 
-        rewards.add(new Reward(R.drawable.menu, "Relax", "Lorem ipsum dolor sit amet, consectur adipsicing elit", 25));
+        //rewards.add(new Reward(R.drawable.menu, "Relax", "Lorem ipsum dolor sit amet, consectur adipsicing elit", 25));
 
         final RewardAdapter ra = new RewardAdapter(rewards);
         ra.setOnItemClickListener(new RewardAdapter.OnItemClickListener() {
@@ -106,21 +106,28 @@ public class RewardListActivity extends AppCompatActivity {
         fabCategory.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu first item clicked
-
+                CategoryDialog sd = new CategoryDialog();
+                sd.show(getFragmentManager(), "");
             }
         });
 
         fabTask.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
-
+                Intent i = new Intent();
+                i.setAction(Intent.ACTION_CALL);
+                i.setClass(getBaseContext(), AddEditTaskMenu.class);
+                startActivityForResult(i, 10);
             }
         });
 
         fabReward.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu third item clicked
-
+                Intent i = new Intent();
+                i.setAction(Intent.ACTION_CALL);
+                i.setClass(getBaseContext(), AddEditRewardMenu.class);
+                startActivityForResult(i, 11);
             }
         });
     }

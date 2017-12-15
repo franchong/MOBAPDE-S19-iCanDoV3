@@ -300,7 +300,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             t.setTitle(c.getString(c.getColumnIndex(Reward.COLUMN_TITLE)));
             t.setDescription(c.getString(c.getColumnIndex(Reward.COLUMN_DESC)));
             t.setPrice(c.getInt(c.getColumnIndex(Reward.COLUMN_PRICE)));
-           // t.setRepeatable(c.get(c.getColumnIndex(Reward.COLUMN_REPEATABLE)));
+            // t.setRepeatable(c.get(c.getColumnIndex(Reward.COLUMN_REPEATABLE)));
             //t.setRecurring(c.getBoolean(c.getColumnIndex(Reward.COLUMN_RECURR)));
             t.setId(id);
         }
@@ -313,16 +313,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // getAllTasks
     public Cursor getAllTasksCursor(String PRIORITY, String SORT){
-        return getReadableDatabase().query(Task.TABLE_NAME, null,null,null,null,PRIORITY+" " +SORT);
+        return getReadableDatabase().query(Task.TABLE_NAME, null,null,null,null,null,PRIORITY+" " +SORT);
     }
 
     // getAllCategories
     public Cursor getAllCategoriesCursor(String PRIORITY, String SORT){
-        return getReadableDatabase().query(Category.TABLE_NAME, null,null,null,null,PRIORITY+" " +SORT);
+        return getReadableDatabase().query(Category.TABLE_NAME, null,null,null,null,null,PRIORITY+" " +SORT);
     }
 
     // getAllReward
     public Cursor getAllRewardCursor(String PRIORITY, String SORT){
-        return getReadableDatabase().query(Reward.TABLE_NAME, null,null,null,null,PRIORITY +" " +SORT);
+        return getReadableDatabase().query(Reward.TABLE_NAME, null,null,null,null,null,PRIORITY +" " +SORT);
     }
 }

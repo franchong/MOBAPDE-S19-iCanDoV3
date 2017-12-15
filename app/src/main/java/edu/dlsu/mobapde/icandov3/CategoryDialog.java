@@ -30,20 +30,11 @@ public class CategoryDialog extends DialogFragment {
         AlertDialog.Builder builder
                 = new AlertDialog.Builder(getActivity())
                 .setView(v)
-                .setPositiveButton("Rename", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         //TODO get category name and update rv and db
-
-                        dismiss();
-                    }
-                })
-                .setNeutralButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        //TODO delete category db and update rv
 
                         dismiss();
                     }

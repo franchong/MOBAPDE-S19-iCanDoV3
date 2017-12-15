@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -103,9 +104,13 @@ public class AddEditTaskMenu extends AppCompatActivity {
                 if(ivRecurring.getTag() != null && ivRecurring.getTag().toString().equals("nonrecurring")){
                     ivRecurring.setImageResource(R.drawable.recurring);
                     ivRecurring.setTag("recurring");
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Reward is set to recurring.", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
                 } else {
                     ivRecurring.setImageResource(R.drawable.nonrecurring);
                     ivRecurring.setTag("nonrecurring");
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Reward is set to nonrecurring.", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
                 }
 
             }

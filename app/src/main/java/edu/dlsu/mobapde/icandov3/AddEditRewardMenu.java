@@ -2,6 +2,8 @@ package edu.dlsu.mobapde.icandov3;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,11 +39,13 @@ public class AddEditRewardMenu extends AppCompatActivity {
                 if(ivRecurring.getTag() != null && ivRecurring.getTag().toString().equals("nonrecurring")){
                     ivRecurring.setImageResource(R.drawable.recurring);
                     ivRecurring.setTag("recurring");
-                    // add snackbar
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Reward is set to repeatable.", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
                 } else {
                     ivRecurring.setImageResource(R.drawable.nonrecurring);
                     ivRecurring.setTag("nonrecurring");
-                    // add snackbar
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Task is set to nonrepeatable.", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
                 }
 
             }

@@ -80,9 +80,9 @@ public class TaskListActivity extends AppCompatActivity {
 
         final ArrayList<Task> tasks = new ArrayList<>();
 
-        tasks.add(new Task(R.drawable.menu,"Laundry", "Lorem ipsum dolor sit amet, consectur adipsicing elit", "12-14-17", "H", 3, true));
-        tasks.add(new Task(R.drawable.menu,"Mop", "Lorem ipsum dolor sit amet, consectur adipsicing elit", "12-14-17", "H", 3, true));
-        tasks.add(new Task(R.drawable.menu,"Sweep", "Lorem ipsum dolor sit amet, consectur adipsicing elit", "12-14-17", "H", 3, true));
+        //tasks.add(new Task(R.drawable.menu,"Laundry", "Lorem ipsum dolor sit amet, consectur adipsicing elit", "12-14-17", "H", 3, true));
+        //tasks.add(new Task(R.drawable.menu,"Mop", "Lorem ipsum dolor sit amet, consectur adipsicing elit", "12-14-17", "H", 3, true));
+        //tasks.add(new Task(R.drawable.menu,"Sweep", "Lorem ipsum dolor sit amet, consectur adipsicing elit", "12-14-17", "H", 3, true));
 
         final TaskAdapter ta = new TaskAdapter(tasks);
         ta.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
@@ -169,21 +169,28 @@ public class TaskListActivity extends AppCompatActivity {
         fabCategory.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu first item clicked
-
+                CategoryDialog sd = new CategoryDialog();
+                sd.show(getFragmentManager(), "");
             }
         });
 
         fabTask.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
-
+                Intent i = new Intent();
+                i.setAction(Intent.ACTION_CALL);
+                i.setClass(getBaseContext(), AddEditTaskMenu.class);
+                startActivityForResult(i, 8);
             }
         });
 
         fabReward.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu third item clicked
-
+                Intent i = new Intent();
+                i.setAction(Intent.ACTION_CALL);
+                i.setClass(getBaseContext(), AddEditRewardMenu.class);
+                startActivityForResult(i, 9);
             }
         });
     }

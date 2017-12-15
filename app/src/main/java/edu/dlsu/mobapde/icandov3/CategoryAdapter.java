@@ -24,16 +24,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_list, parent, false);
+                .inflate(R.layout.item, parent, false);
         return new CategoryViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(final CategoryViewHolder holder, int position) {
         final Category currentCategory = data.get(position);
-        holder.ivMenu.setImageResource(currentCategory.getIcon());
-        holder.tvLeft.setText(currentCategory.getTitle());
-        holder.tvRight.setText(currentCategory.getNumOfTasks() + " Tasks");
+        //holder.tvLeft.setText(currentCategory.getTitle());
+        //holder.tvRight.setText(currentCategory.getNumOfTasks() + " Tasks");
 
         holder.itemView.setTag(currentCategory);
 
@@ -53,12 +52,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView ivMenu;
         TextView tvLeft, tvRight;
 
         public CategoryViewHolder(View itemView) {
             super(itemView);
-            ivMenu = itemView.findViewById(R.id.iv_menu);
             tvLeft = itemView.findViewById(R.id.tv_left);
             tvRight = itemView.findViewById(R.id.tv_right);
         }

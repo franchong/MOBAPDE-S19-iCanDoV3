@@ -23,7 +23,7 @@ public class Reward {
 
     public Reward(){}
 
-    public Reward(int icon, String title, String description, int points) {
+    public Reward(String title, String description, int points) {
         this.title = title;
         this.description = description;
         this.points = points;
@@ -38,10 +38,6 @@ public class Reward {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public int getIcon() {
-        return icon;
     }
 
     public String getTitle() {

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class CategoryListActivity extends AppCompatActivity {
 
     ProgressBar pgLevel;
-    LinearLayout llSearch, llSort, llRewards;
+    LinearLayout llSearch, llRewards;
     RecyclerView rvCategories;
     FloatingActionMenu floatingActionMenu;
     FloatingActionButton fabCategory, fabTask, fabReward;
@@ -55,16 +55,6 @@ public class CategoryListActivity extends AppCompatActivity {
             }
         });
 
-        llSort = findViewById(R.id.ll_sort);
-
-        llSort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SortDialog sd = new SortDialog();
-                sd.show(getFragmentManager(), "");
-            }
-        });
-
         llRewards = findViewById(R.id.ll_rewards);
         llRewards.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,13 +70,13 @@ public class CategoryListActivity extends AppCompatActivity {
 
         final ArrayList<Category> categories = new ArrayList<>();
 
-        categories.add(new Category(R.drawable.menu, "All Tasks", 20));
+        /*categories.add(new Category(R.drawable.menu, "All Tasks", 20));
         categories.add(new Category(R.drawable.menu, "Due Today", 5));
         categories.add(new Category(R.drawable.menu, "Chores", 3));
         categories.add(new Category(R.drawable.menu, "Academics", 20));
         categories.add(new Category(R.drawable.menu, "Important", 5));
         categories.add(new Category(R.drawable.menu, "Habits", 3));
-        categories.add(new Category(R.drawable.menu, "Outing", 20));
+        categories.add(new Category(R.drawable.menu, "Outing", 20));*/
 
         final CategoryAdapter ca = new CategoryAdapter(categories);
         ca.setOnItemClickListener(new CategoryAdapter.OnItemClickListener() {
