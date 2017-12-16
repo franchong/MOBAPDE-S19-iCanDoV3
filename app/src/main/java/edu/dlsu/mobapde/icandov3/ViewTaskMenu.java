@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +28,7 @@ public class ViewTaskMenu extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle saveInstanceState) {
-        View v = LayoutInflater.from(getActivity())
+        final View v = LayoutInflater.from(getActivity())
                 .inflate(R.layout.dialog_view_task_menu, null);
 
         final DatabaseHelper db = new DatabaseHelper(v.getContext());
@@ -40,43 +42,43 @@ public class ViewTaskMenu extends DialogFragment {
 
         Bundle bundle = this.getArguments();
         //if (bundle != null) {
-            final long id = bundle.getLong(Task.COLUMN_ID);
-            final String title = bundle.getString(Task.COLUMN_TITLE);
-            final String description = bundle.getString(Task.COLUMN_DESC);
-            final String strDuedate = bundle.getString(Task.COLUMN_DUEDATE);
-            final String strCreatedate = bundle.getString(Task.COLUMN_CREATIONDATE);
-            final long categoryID = bundle.getLong(Task.COLUMN_CAT);
-            final boolean isRecurr = bundle.getBoolean(Task.COLUMN_RECURR);
+        final long id = bundle.getLong(Task.COLUMN_ID);
+        final String title = bundle.getString(Task.COLUMN_TITLE);
+        final String description = bundle.getString(Task.COLUMN_DESC);
+        final String strDuedate = bundle.getString(Task.COLUMN_DUEDATE);
+        final String strCreatedate = bundle.getString(Task.COLUMN_CREATIONDATE);
+        final long categoryID = bundle.getLong(Task.COLUMN_CAT);
+        final boolean isRecurr = bundle.getBoolean(Task.COLUMN_RECURR);
 
-            tvTaskName.setText(title);
+        tvTaskName.setText(title);
 
-            Date endDateValue = null;
-            String strEndDate = strDuedate;
-            SimpleDateFormat df = new SimpleDateFormat("MM-dd-yy");
-            try {
-                endDateValue = df.parse(strEndDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            final Date startDateValue = Calendar.getInstance().getTime();
-            long diff = endDateValue.getTime() - startDateValue.getTime();
-            int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-            tvDaysLeft.setText(days);
+        Date endDateValue = null;
+        String strEndDate = strDuedate;
+        SimpleDateFormat df = new SimpleDateFormat("MM-dd-yy");
+        try {
+            endDateValue = df.parse(strEndDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        final Date startDateValue = Calendar.getInstance().getTime();
+        long diff = endDateValue.getTime() - startDateValue.getTime();
+        int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+        tvDaysLeft.setText(days);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
-            String dayOfTheWeek = sdf.format(endDateValue);
-            tvDay.setText(dayOfTheWeek);
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        String dayOfTheWeek = sdf.format(endDateValue);
+        tvDay.setText(dayOfTheWeek);
 
-            tvDuedate.setText(strDuedate);
+        tvDuedate.setText(strDuedate);
 
-            tvDescription.setText(description);
+        tvDescription.setText(description);
 
-            if (!isRecurr) {
-                ivRecurr.setImageResource(android.R.color.transparent);
-            }
-            else if (isRecurr) {
-                ivRecurr.setImageResource(R.drawable.recurring);
-            }
+        if (!isRecurr) {
+            ivRecurr.setImageResource(android.R.color.transparent);
+        }
+        else if (isRecurr) {
+            ivRecurr.setImageResource(R.drawable.recurring);
+        }
         //}
 
         AlertDialog.Builder builder
@@ -90,10 +92,19 @@ public class ViewTaskMenu extends DialogFragment {
                             cal.setTime(Calendar.getInstance().getTime());
                             cal.add(Calendar.DAY_OF_YEAR, 1);
                             Date dueDate = cal.getTime();
-                            Task t = new Task(0, title, description, dueDate, Calendar.getInstance().getTime(),
+                            Task t = new Task(title, description, dueDate, Calendar.getInstance().getTime(),
                                     0, isRecurr);
                             db.addTask(t);
                             db.deleteTask(id);
+                            SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(v.getContext());
+                            SharedPreferences.Editor dspEditor = dsp.edit(); // has write access
+                            int points = dsp.getInt(User.COLUMN_POINTS, -1);
+                            points ++;
+                            dspEditor.putInt(User.COLUMN_POINTS, points);
+                            dspEditor.apply();
+
+
+
                             //TODO how to notify/update adapter
                         }
                         else {

@@ -12,18 +12,18 @@ import android.widget.TextView;
  * Created by Dell on 12/08/2017.
  */
 
-public class CategoryAdapter extends CursorRecyclerViewAdapter <CategoryAdapter.CategoryViewHolder> {
+public class SearchAdapter extends CursorRecyclerViewAdapter <SearchAdapter.SearchViewHolder> {
     private OnItemClickListener onItemClickListener;
 
-    public CategoryAdapter(Context context, Cursor cursor) {
+    public SearchAdapter(Context context, Cursor cursor) {
         super(context, cursor);
     }
 
     @Override
-    public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item, parent, false);
-        return new CategoryViewHolder(v);
+        return new SearchViewHolder(v);
     }
     /*  long id = cursor.getLong(cursor.getColumnIndex(Reminder.COLUMN_ID));
         String name = cursor.getString(cursor.getColumnIndex(Reminder.COLUMN_REMINDER));
@@ -34,7 +34,7 @@ public class CategoryAdapter extends CursorRecyclerViewAdapter <CategoryAdapter.
         reminder.setPriority(p);
      */
     @Override
-    public void onBindViewHolder(CategoryViewHolder viewHolder, Cursor cursor) {
+    public void onBindViewHolder(SearchViewHolder viewHolder, Cursor cursor) {
         long id = cursor.getLong(cursor.getColumnIndex(Category.COLUMN_ID));
         String name = cursor.getString(cursor.getColumnIndex(Category.COLUMN_NAME));
         //viewHolder.ivMenu.setImageResource();
@@ -50,11 +50,11 @@ public class CategoryAdapter extends CursorRecyclerViewAdapter <CategoryAdapter.
         });
     }
 
-    public class CategoryViewHolder extends RecyclerView.ViewHolder {
+    public class SearchViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvLeft, tvRight;
 
-        public CategoryViewHolder(View itemView) {
+        public SearchViewHolder(View itemView) {
             super(itemView);
             tvLeft = itemView.findViewById(R.id.tv_left);
             tvRight = itemView.findViewById(R.id.tv_right);
@@ -65,8 +65,6 @@ public class CategoryAdapter extends CursorRecyclerViewAdapter <CategoryAdapter.
     public interface OnItemClickListener {
         public void onItemClick(Long c);
     }
-
-
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;

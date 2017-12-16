@@ -170,7 +170,7 @@ public class AddEditTaskMenu extends AppCompatActivity {
                 data.putExtra(Task.COLUMN_DESC, description);
                 data.putExtra(Task.COLUMN_DUEDATE, date);
                 data.putExtra(Task.COLUMN_RECURR, recurring);
-                data.putExtra("isEdit", true);
+                data.putExtra("isEdit", false);
 
                 setResult(RESULT_OK, data);
                 finish();

@@ -6,7 +6,9 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
@@ -59,7 +61,7 @@ public class AlarmReceiver extends BroadcastReceiver{
                     e.printStackTrace();
                 }
 
-                Task t = new Task(id, title, desc, dueDate, createDate, cat, false);
+                Task t = new Task(title, desc, dueDate, createDate, cat, false);
                 taskArrayList.add(t);
             }
         } finally {
@@ -67,8 +69,7 @@ public class AlarmReceiver extends BroadcastReceiver{
         }
 
         ArrayList<Task> tasksDueToday = new ArrayList<>();
-        ArrayList<Task> tasksOverDue = new ArrayList<>();
-        //TODO overdue reminder
+        ArrayList<Task> overDueTasks =new ArrayList<>();
 
         Date today = Calendar.getInstance().getTime();
 
@@ -76,6 +77,18 @@ public class AlarmReceiver extends BroadcastReceiver{
             if (compareTwoDates(today, t.getDuedate()) == 0) {
                 tasksDueToday.add(t);
             }
+            else if (compareTwoDates(today, t.getDuedate()) == -1) {
+                overDueTasks.add(t);
+            }
+        }
+
+        for (Task t : overDueTasks) {
+            SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor dspEditor = dsp.edit(); // has write access
+            int points = dsp.getInt(User.COLUMN_POINTS, -1);
+            points--;
+            dspEditor.putInt(User.COLUMN_POINTS, points);
+            dspEditor.apply();
         }
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
@@ -83,8 +96,12 @@ public class AlarmReceiver extends BroadcastReceiver{
         Intent saIntent = new Intent(context, TaskListActivity.class);
         PendingIntent saPI = PendingIntent.getActivity(context, 0, saIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        tasksDueToday.add(new Task(0, "title", "desc", today, today, 0, false));
-        tasksDueToday.add(new Task(1, "title2", "desc2", today, today, 1, false));
+        tasksDueToday.add(new Task("title", "desc", today, today, 0, false));
+        tasksDueToday.add(new Task("title2", "desc2", today, today, 1, false));
+
+        Log.i("Date", today.toString());
+
+        SimpleDateFormat df = new SimpleDateFormat("MM-dd-yy");
 
         String strDueTasks = "";
         for (Task t : tasksDueToday) {
@@ -92,7 +109,6 @@ public class AlarmReceiver extends BroadcastReceiver{
         }
 
             NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(context)
-                    .setContentIntent(saPI)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setTicker(tasksDueToday.size() + " Tasks Due Today")
                     .setContentTitle(tasksDueToday.size() + " Tasks Due Today")
@@ -108,6 +124,7 @@ public class AlarmReceiver extends BroadcastReceiver{
          * return 0 if task is due today
          *
          */
+
         Date sDate = getZeroTimeDate(startDate);
         Date eDate = getZeroTimeDate(endDate);
         if (sDate.before(eDate)) {
@@ -118,6 +135,7 @@ public class AlarmReceiver extends BroadcastReceiver{
         }
         return 0;
     }
+
 
     private static Date getZeroTimeDate(Date date) {
         Calendar calendar = Calendar.getInstance();

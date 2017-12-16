@@ -31,7 +31,6 @@
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:textColor="#515454"
-        android:text="3 Tasks"
         android:paddingRight="20dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"

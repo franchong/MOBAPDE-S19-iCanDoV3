@@ -5,18 +5,17 @@ package edu.dlsu.mobapde.icandov3;
  */
 
 public class Category {
+
     public static final String TABLE_NAME = "category";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_NAME = "name";
-    public static final String COLUMN_NUMTASKS = "numTasks";
 
     private long id;
     private String name;
     private int numTasks;
 
     public Category() {}
-    public Category(long id, String name) {
-        this.id = id;
+    public Category(String name) {
         this.name = name;
     }
 

@@ -1,52 +1,55 @@
 package edu.dlsu.mobapde.icandov3;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 /**
  * Created by Dell on 12/09/2017.
  */
 
-public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardViewHolder> {
+public class RewardAdapter extends CursorRecyclerViewAdapter<RewardAdapter.RewardViewHolder> {
 
-    ArrayList<Reward> data;
 
-    public RewardAdapter(ArrayList<Reward> data) {
-        this.data = data;
+    public RewardAdapter(Context context, Cursor cursor) {
+        super(context, cursor);
     }
 
     @Override
-    public RewardAdapter.RewardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RewardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item, parent, false);
-        return new RewardAdapter.RewardViewHolder(v);
+        return new RewardViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(final RewardViewHolder holder, int position) {
-        final Reward currentReward = data.get(position);
-        holder.tvLeft.setText(currentReward.getTitle());
-        holder.tvRight.setText(currentReward.getPoints() + " points");
+    public void onBindViewHolder(RewardViewHolder viewHolder, Cursor cursor) {
 
-        holder.itemView.setTag(currentReward);
+        Reward reward = null;
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Reward r = (Reward) view.getTag();
-                onItemClickListener.onItemClick(r);
-            }
-        });
-    }
+        long id = cursor.getLong(cursor.getColumnIndex(Reward.COLUMN_ID));
+        String name = cursor.getString(cursor.getColumnIndex(Reward.COLUMN_TITLE));
+        int points = cursor.getInt(cursor.getColumnIndex(Reward.COLUMN_POINTS));
 
-    @Override
-    public int getItemCount() {
-        return data.size();
+        //viewHolder.ivMenu.setImageResource();
+        viewHolder.tvLeft.setText(name);
+        viewHolder.tvRight.setText(points + " Points");
+
+        if (reward != null) {
+
+            viewHolder.itemView.setTag(id);
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onItemClick((Reward) v.getTag());
+                }
+            });
+
+        }
     }
 
     public class RewardViewHolder extends RecyclerView.ViewHolder {
@@ -66,9 +69,9 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.RewardView
         public void onItemClick(Reward r);
     }
 
-    private RewardAdapter.OnItemClickListener onItemClickListener;
+    private OnItemClickListener onItemClickListener;
 
-    public void setOnItemClickListener(RewardAdapter.OnItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 

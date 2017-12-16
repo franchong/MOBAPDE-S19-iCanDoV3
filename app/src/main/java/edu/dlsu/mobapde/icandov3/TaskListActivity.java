@@ -7,18 +7,22 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -39,6 +43,10 @@ public class TaskListActivity extends AppCompatActivity {
     DatabaseHelper db;
     AlarmManager alarmMgr;
     PendingIntent alarmIntent;
+    TextView tvCategory;
+    TaskAdapter ta;
+    long categoryid = -1;
+    TextView tvPoints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +54,14 @@ public class TaskListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_task_list);
 
         db = new DatabaseHelper(getBaseContext());
+        tvCategory = findViewById(R.id.tv_category);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_gradient));
+
+        categoryid = getIntent().getExtras().getLong("CategoryID");
+        Category category = db.getCategory(categoryid);
+        tvCategory.setText(category.getName());
 
         pgLevel = findViewById(R.id.pg_bar);
         pgLevel.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#11ffb6")));
@@ -92,9 +105,7 @@ public class TaskListActivity extends AppCompatActivity {
 
         final ArrayList<Task> tasks = new ArrayList<>();
 
-
-
-        final TaskAdapter ta = new TaskAdapter(getBaseContext(), db.getAllTasksCursor());
+        ta = new TaskAdapter(getBaseContext(), db.getAllTasksCursor(categoryid));
         ta.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Task t) {
@@ -277,7 +288,7 @@ public class TaskListActivity extends AppCompatActivity {
 
             //TODO interface: add a category selection option, then add category to Task
             //TODO long ID and Category ID
-            Task task = new Task(0, title, desc, dueDate, createDate, 0, recurr);
+            Task task = new Task(title, desc, dueDate, createDate, categoryid, recurr);
 
             if (isEdit) {
                 db.editTask(task, getIntent().getLongExtra(Task.COLUMN_ID, 0));
@@ -296,6 +307,21 @@ public class TaskListActivity extends AppCompatActivity {
         if(requestCode == 4 && resultCode == RESULT_OK) {
 
         }
+
+        //TODO User Shared Preferences
+        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor dspEditor = dsp.edit();
+        int currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
+        if (currentPoints == -1) {
+            dspEditor.putInt(User.COLUMN_POINTS, 0);
+        }
+        dspEditor.apply();
+        tvPoints = (TextView) findViewById(R.id.tv_points);
+
+        tvPoints.setText(Integer.toString(currentPoints));
+        pgLevel.setProgress(currentPoints);
+
+        Log.i("LOG POINTS", String.valueOf(dsp.getInt(User.COLUMN_POINTS, -1)));
 
     }
 
@@ -326,5 +352,30 @@ public class TaskListActivity extends AppCompatActivity {
         calendar.set(Calendar.MILLISECOND, 0);
         date = calendar.getTime();
         return date;
+    }
+
+    protected void refresh(String priority, String order) {
+        super.onResume();
+
+        String prio = null;
+        String ord = null;
+
+        Log.d("TAG", priority);
+        Log.d("TAG", order);
+
+        if( priority.equalsIgnoreCase("Name"))
+            prio = Task.COLUMN_TITLE;
+        if( priority.equalsIgnoreCase("Due Date"))
+            prio = Task.COLUMN_DUEDATE;
+        if( priority.equalsIgnoreCase("Creation Date"))
+            prio = Task.COLUMN_CREATIONDATE;
+
+        if( order.equalsIgnoreCase("Ascending"))
+            ord = "ASC";
+        if( order.equalsIgnoreCase("Descending"))
+            ord = "DESC";
+
+        Log.d("TAG", prio + " " + ord);
+        ta.changeCursor(db.getAllTasksCursor(prio, ord, categoryid));
     }
 }

@@ -1,20 +1,29 @@
 package edu.dlsu.mobapde.icandov3;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.support.design.widget.CoordinatorLayout;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 public class AddEditRewardMenu extends AppCompatActivity {
 
     ProgressBar pgLevel;
-    ImageView ivRecurring;
+    ImageView ivRepeatable;
+    EditText etName, etDescription, etPoints;
+    Button buttonCancel, buttonSave;
+    AlertDialog alertDialog;
+    DatabaseHelper dbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,29 +36,86 @@ public class AddEditRewardMenu extends AppCompatActivity {
         pgLevel = findViewById(R.id.pg_bar);
         pgLevel.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#11ffb6")));
 
-        ivRecurring = (ImageView) findViewById(R.id.iv_recurring);
+        etName         = findViewById(R.id.et_name);
+        etDescription  = findViewById(R.id.et_description);
+        etPoints       = findViewById(R.id.et_points);
+        buttonCancel   = findViewById(R.id.button_cancel);
+        buttonSave     = findViewById(R.id.button_save);
+        ivRepeatable   = findViewById(R.id.iv_repeatable);
 
-        ivRecurring.setTag("nonrecurring");
+        dbHelper = new DatabaseHelper(getBaseContext());
 
-        ivRecurring.setOnClickListener(new View.OnClickListener() {
+        ivRepeatable.setTag("false");
+
+        ivRepeatable.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
 
-                if(ivRecurring.getTag() != null && ivRecurring.getTag().toString().equals("nonrecurring")){
-                    ivRecurring.setImageResource(R.drawable.recurring);
-                    ivRecurring.setTag("recurring");
+                if(ivRepeatable.getTag() != null && ivRepeatable.getTag().toString().equals("false")){
+                    ivRepeatable.setImageResource(R.drawable.recurring);
+                    ivRepeatable.setTag("true");
                     Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Reward is set to repeatable.", Snackbar.LENGTH_SHORT);
                     snackbar.show();
                 } else {
-                    ivRecurring.setImageResource(R.drawable.nonrecurring);
-                    ivRecurring.setTag("nonrecurring");
-                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Task is set to nonrepeatable.", Snackbar.LENGTH_SHORT);
+                    ivRepeatable.setImageResource(R.drawable.nonrecurring);
+                    ivRepeatable.setTag("false");
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Reward is set to nonrepeatable.", Snackbar.LENGTH_SHORT);
                     snackbar.show();
                 }
 
             }
 
         });
+
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Reward reward = new Reward();
+
+                if (etName.getText() != null) {
+
+                    reward.setTitle(etName.getText().toString());
+                    reward.setDescription(etDescription.getText().toString());
+                    if (ivRepeatable.getTag().toString().equals("false"))
+                        reward.setRepeatable(false);
+                    else
+                        reward.setRepeatable(true);
+                    reward.setPoints(Integer.parseInt(etPoints.getText().toString()));
+
+                    dbHelper.addReward(reward);
+
+                    Intent i = new Intent();
+                    i.setAction(Intent.ACTION_CALL);
+                    i.setClass(getBaseContext(), RewardListActivity.class);
+                    startActivityForResult(i, 11);
+
+                } else {
+
+                    alertDialog = new AlertDialog.Builder(getBaseContext()).create();
+                    alertDialog.setTitle("Error");
+                    alertDialog.setMessage("No reward name found!");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+
+                }
+            }
+        });
+
+
     }
 }
+

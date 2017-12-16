@@ -9,26 +9,21 @@ public class Reward {
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_DESC = "desc";
-    public static final String COLUMN_PRICE = "price";
-    public static final String COLUMN_RECURR = "recurr";
+    public static final String COLUMN_POINTS = "points";
     public static final String COLUMN_REPEATABLE= "repeatable";
 
     private long id;
-    String title;
-    String description;
-    int points;
-    private int price;
-    public boolean isRecurring;
-    public boolean isRepeatable;
+    private String title;
+    private String description;
+    private int points;
+    private boolean isRepeatable;
 
     public Reward(){}
 
-    public Reward(String title, String description, int points) {
+    public Reward(String title, String description, int points, boolean isRepeatable) {
         this.title = title;
         this.description = description;
         this.points = points;
-        this.price = price;
-        this.isRecurring = isRecurring;
         this.isRepeatable = isRepeatable;
     }
 
@@ -63,13 +58,6 @@ public class Reward {
     public void setPoints(int points) {
         this.points = points;
     }
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
 
     public boolean isRepeatable() {
         return isRepeatable;
@@ -79,11 +67,4 @@ public class Reward {
         isRepeatable = repeatable;
     }
 
-    public boolean isRecurring() {
-        return isRecurring;
-    }
-
-    public void setRecurring(boolean recurring) {
-        isRecurring = recurring;
-    }
 }

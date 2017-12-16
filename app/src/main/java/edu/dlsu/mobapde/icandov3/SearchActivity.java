@@ -3,10 +3,14 @@ package edu.dlsu.mobapde.icandov3;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -16,14 +20,21 @@ import com.github.clans.fab.FloatingActionMenu;
 public class SearchActivity extends AppCompatActivity {
 
     ProgressBar pgLevel;
-    LinearLayout llSort;
+    LinearLayout llSort, llSearch;
     FloatingActionMenu floatingActionMenu;
     FloatingActionButton fabCategory, fabTask, fabReward;
+    DatabaseHelper dbHelper;
+    AutoCompleteTextView etSearch;
+    SearchAdapter sa;
+    RecyclerView rvSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        dbHelper = new DatabaseHelper(getBaseContext());
+
+        etSearch = findViewById(R.id.tv_search);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_gradient));
@@ -40,6 +51,18 @@ public class SearchActivity extends AppCompatActivity {
                 sd.show(getFragmentManager(), "");
             }
         });
+
+        llSearch = findViewById(R.id.ll_search);
+
+        llSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String search = etSearch.getText().toString();
+                refresh(search);
+            }
+        });
+
+        rvSearch = findViewById(R.id.rv_search);
 
         floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_menu);
         fabCategory = (FloatingActionButton) findViewById(R.id.fab_category);
@@ -75,24 +98,36 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    //TODO update database and add snackbar notification
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void refresh( String search) {
 
-        if(requestCode == 3 && resultCode == RESULT_OK) {
+        Log.d("TAG", "Searching for " + search);
+        super.onResume();
+        sa = new SearchAdapter(getBaseContext(), dbHelper.getSearchCategory(search));
+        sa.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
 
-        }
-        if (requestCode == 3 && resultCode == RESULT_CANCELED) {
+            @Override
+            public void onItemClick(Long c) {
+                //TODO lead the user to the taskListActivity with the correct category
+                Log.d("TAG", "Here in Search Activity");
+                Log.d("TAG", "Item is clicked");
+                Intent intent = new Intent();
+                intent.setClass(getBaseContext(), CategoryListActivity.class);
 
-        }
+                intent.putExtra("itemID", c);
+                Log.d("TAG", "ID IS :" + c + "");
 
-        if(requestCode == 4 && resultCode == RESULT_OK) {
+                etSearch.setText("");
+                startActivity(intent);
 
-        }
-        if (requestCode == 4 && resultCode == RESULT_CANCELED) {
+            }
+        });
+        rvSearch.setAdapter(sa);
 
-        }
-
+        rvSearch.setLayoutManager(new LinearLayoutManager(
+                getBaseContext(), LinearLayoutManager.VERTICAL, false
+        ));
     }
+
 }
+
+

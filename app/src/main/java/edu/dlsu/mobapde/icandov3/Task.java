@@ -15,7 +15,7 @@ public class Task {
     public static final String COLUMN_DUEDATE = "duedate";
     public static final String COLUMN_CREATIONDATE = "createdate";
     public static final String COLUMN_RECURR = "recurr";
-    public static final String COLUMN_CAT = "category";
+    public static final String COLUMN_CAT = "categoryID";
 
     private int icon;
     private long id;
@@ -26,10 +26,8 @@ public class Task {
     private long categoryID;
     public boolean isRecurr;
 
-    public Task() {}
-
-    public Task(long id, String title, String description, Date duedate, Date createdate, long categoryID, boolean isRecurr) {
-        this.id = id;
+    public Task () {}
+    public Task(String title, String description, Date duedate, Date createdate, long categoryID, boolean isRecurr) {
         this.title = title;
         this.description = description;
         this.duedate = duedate;
@@ -102,6 +100,8 @@ public class Task {
     public void setRecurr(boolean recurr) {
         isRecurr = recurr;
     }
+
+
 
 
 }
