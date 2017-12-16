@@ -36,57 +36,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // creates the task
         String sql = "CREATE TABLE " + Task.TABLE_NAME + " ("
-                + Task.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + Task.COLUMN_TITLE + " TEXT,"
-                + Task.COLUMN_DESC + " TEXT,"
-                + Task.COLUMN_DUEDATE + " DATE,"
-                + Task.COLUMN_CREATIONDATE + " DATE,"
-                + Task.COLUMN_CAT + "INTEGER"
-                + Task.COLUMN_RECURR + "BOOLEAN"
+                + Task.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + Task.COLUMN_TITLE + " TEXT, "
+                + Task.COLUMN_DESC + " TEXT, "
+                + Task.COLUMN_DUEDATE + " DATE, "
+                + Task.COLUMN_CREATIONDATE + " DATE, "
+                + Task.COLUMN_CAT + " INTEGER, "
+                + Task.COLUMN_RECURR + " BOOLEAN "
                 + ");";
         sqLiteDatabase.execSQL(sql);
 
         //creates Category
         sql = "CREATE TABLE " + Category.TABLE_NAME + " ("
                 + Category.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + Category.COLUMN_NAME + " TEXT,"
+                + Category.COLUMN_NAME + " TEXT "
                 + ");";
         sqLiteDatabase.execSQL(sql);
 
         //creates Rewards Table
         sql = "CREATE TABLE " + Reward.TABLE_NAME + " ("
-                + Reward.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + Reward.COLUMN_TITLE + " TEXT,"
-                + Reward.COLUMN_DESC + " TEXT,"
-                + Reward.COLUMN_PRICE + " INTEGER,"
-                + Reward.COLUMN_REPEATABLE+ " BOOLEAN,"
+                + Reward.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + Reward.COLUMN_TITLE + " TEXT, "
+                + Reward.COLUMN_DESC + " TEXT, "
+                + Reward.COLUMN_PRICE + " INTEGER, "
+                + Reward.COLUMN_REPEATABLE+ " BOOLEAN "
                 + ");";
         sqLiteDatabase.execSQL(sql);
 
         //TODO Add and clarify points system
-        sql = "CREATE TABLE " + "GAME" + " ("
-                + "POINTS" + " INTEGER,"
-                + ");";
-        sqLiteDatabase.execSQL(sql);
+//        sql = "CREATE TABLE " + "GAME" + " ("
+//                + "POINTS" + " INTEGER"
+//                + ");";
+//        sqLiteDatabase.execSQL(sql);
 
         //TODO These are samples
-        addCategory(new Category(0, "Category"));
-        addTask(new Task(
-                0,
-                "Task0",
-                "description",
-                new Date(1,1,1),
-                new Date(1,1,1),
-                0,
-                true));
-        addTask(new Task(
-                1,
-                "Task1",
-                "description",
-                new Date(1,1,1),
-                new Date(1,1,1),
-                0,
-                true));
+//        addCategory(new Category(0, "Category"));
+//        addTask(new Task(
+//                0,
+//                "Task0",
+//                "description",
+//                Calendar.getInstance().getTime(),
+//                Calendar.getInstance().getTime(),
+//                0,
+//                true));
+//        addTask(new Task(
+//                1,
+//                "Task1",
+//                "description",
+//                Calendar.getInstance().getTime(),
+//                Calendar.getInstance().getTime(),
+//                0,
+//                true));
 
 
     }

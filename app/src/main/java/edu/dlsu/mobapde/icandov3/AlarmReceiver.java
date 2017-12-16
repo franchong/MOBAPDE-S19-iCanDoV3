@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,6 +36,7 @@ public class AlarmReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        Log.i("ALARMRECEIVER", "EXECUTED");
         db = new DatabaseHelper(context);
 
         Cursor cursor = db.getAllTasksCursor();
@@ -81,17 +83,22 @@ public class AlarmReceiver extends BroadcastReceiver{
         Intent saIntent = new Intent(context, TaskListActivity.class);
         PendingIntent saPI = PendingIntent.getActivity(context, 0, saIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        tasksDueToday.add(new Task(0, "title", "desc", today, today, 0, false));
+        tasksDueToday.add(new Task(1, "title2", "desc2", today, today, 1, false));
+
+        String strDueTasks = "";
         for (Task t : tasksDueToday) {
+            strDueTasks = strDueTasks + t.getTitle() + ", ";
+        }
+
             NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(context)
                     .setContentIntent(saPI)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setTicker(t.getTitle() + " Due Today")
-                    .setContentTitle(t.getTitle() + " Due Today")
-                    .setContentText(t.getDescription());
+                    .setTicker(tasksDueToday.size() + " Tasks Due Today")
+                    .setContentTitle(tasksDueToday.size() + " Tasks Due Today")
+                    .setContentText(strDueTasks);
 
-            notificationManager.notify(0, builder.build());
-        }
-
+        notificationManager.notify(0, builder.build());
     }
 
     public static int compareTwoDates(Date startDate, Date endDate) {
@@ -114,7 +121,7 @@ public class AlarmReceiver extends BroadcastReceiver{
 
     private static Date getZeroTimeDate(Date date) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        //calendar.setTime(date);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);

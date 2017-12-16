@@ -1,9 +1,13 @@
 package edu.dlsu.mobapde.icandov3;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -133,6 +137,16 @@ public class CategoryListActivity extends AppCompatActivity {
                 startActivityForResult(i, 4);
             }
         });
+
+        //TODO Test Complete Notifications Functional
+        AlarmManager alarmMgr;
+        PendingIntent alarmIntent;
+
+        alarmMgr = (AlarmManager)getBaseContext().getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(getBaseContext(), AlarmReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(getBaseContext(), 1, i, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 1*1000, alarmIntent);
 
     }
 
