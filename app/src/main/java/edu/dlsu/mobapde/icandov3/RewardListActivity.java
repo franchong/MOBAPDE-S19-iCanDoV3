@@ -15,7 +15,11 @@ import android.widget.ProgressBar;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class RewardListActivity extends AppCompatActivity {
 
@@ -138,17 +142,44 @@ public class RewardListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        DatabaseHelper db = new DatabaseHelper(getBaseContext());
+
         if(requestCode == 3 && resultCode == RESULT_OK) {
 
-        }
-        if (requestCode == 3 && resultCode == RESULT_CANCELED) {
+            boolean isEdit = getIntent().getBooleanExtra("isEdit", false);
+
+            String title = data.getExtras().getString(Task.COLUMN_TITLE);
+            String desc = data.getExtras().getString(Task.COLUMN_DESC);
+            Date createDate = Calendar.getInstance().getTime();
+
+            String strDueDate = data.getExtras().getString(Task.COLUMN_DUEDATE);
+            Date dueDate = null;
+            SimpleDateFormat df = new SimpleDateFormat("MM-dd-yy");
+            try {
+                dueDate = df.parse(strDueDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            boolean recurr = data.getExtras().getBoolean(Task.COLUMN_RECURR);
+
+            //TODO interface: add a category selection option, then add category to Task
+            //TODO long ID and Category ID
+            Task task = new Task(0, title, desc, dueDate, createDate, 0, recurr);
+
+            if (isEdit) {
+                db.editTask(task, getIntent().getLongExtra(Task.COLUMN_ID, 0));
+                //TODO does this notify/update the recycler view?
+            }
+            else {
+                db.addTask(task);
+                //TODO does this notify/update the recycler view?
+            }
+            //TODO snackbar to show user it has been added: https://developer.android.com/training/snackbar/action.html
 
         }
 
         if(requestCode == 4 && resultCode == RESULT_OK) {
-
-        }
-        if (requestCode == 4 && resultCode == RESULT_CANCELED) {
 
         }
 

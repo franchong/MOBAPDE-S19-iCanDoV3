@@ -1,12 +1,16 @@
 package edu.dlsu.mobapde.icandov3;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +37,8 @@ public class TaskListActivity extends AppCompatActivity {
     FloatingActionMenu floatingActionMenu;
     FloatingActionButton fabCategory, fabTask, fabReward;
     DatabaseHelper db;
+    AlarmManager alarmMgr;
+    PendingIntent alarmIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,6 +221,23 @@ public class TaskListActivity extends AppCompatActivity {
                 startActivityForResult(i, 9);
             }
         });
+
+        //AlarmManager alarmMgr;
+        //PendingIntent alarmIntent;
+
+        alarmMgr = (AlarmManager)getBaseContext().getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(getBaseContext(), AlarmReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(getBaseContext(), 1, i, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 1);
+
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, alarmIntent);
+
+        //alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+        //        AlarmManager.INTERVAL_DAY, alarmIntent);
     }
 
     //TODO update database and add snackbar notification
@@ -241,6 +264,15 @@ public class TaskListActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            Date today = Calendar.getInstance().getTime();
+            if (compareTwoDates(today, dueDate) == 0) {
+                //alarmMgr = (AlarmManager)getBaseContext().getSystemService(Context.ALARM_SERVICE);
+                Intent i = new Intent(getBaseContext(), AlarmReceiver.class);
+                alarmIntent = PendingIntent.getBroadcast(getBaseContext(), 1, i, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 1*1000, alarmIntent);
+            }
+
             boolean recurr = data.getExtras().getBoolean(Task.COLUMN_RECURR);
 
             //TODO interface: add a category selection option, then add category to Task
@@ -265,5 +297,34 @@ public class TaskListActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    public static int compareTwoDates(Date startDate, Date endDate) {
+        /**
+         * return 1 if task is not overdue
+         * return -1 if task is overdue
+         * return 0 if task is due today
+         *
+         */
+        Date sDate = getZeroTimeDate(startDate);
+        Date eDate = getZeroTimeDate(endDate);
+        if (sDate.before(eDate)) {
+            return 1;
+        }
+        if (sDate.after(eDate)) {
+            return -1;
+        }
+        return 0;
+    }
+
+    private static Date getZeroTimeDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        date = calendar.getTime();
+        return date;
     }
 }
