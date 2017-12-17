@@ -4,13 +4,13 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,11 +25,7 @@ import android.widget.TextView;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class TaskListActivity extends AppCompatActivity {
 
@@ -43,6 +39,8 @@ public class TaskListActivity extends AppCompatActivity {
     PendingIntent alarmIntent;
     TextView tvCategory;
     TaskAdapter ta;
+    TextView tvPoints, tvLevel;
+
     long categoryid = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +177,7 @@ public class TaskListActivity extends AppCompatActivity {
                 dialog.getWindow().setBackgroundDrawableResource(android.R.color.background_dark);
 
             }
+
         };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
@@ -219,115 +218,43 @@ public class TaskListActivity extends AppCompatActivity {
             }
         });
 
-        //AlarmManager alarmMgr;
-        //PendingIntent alarmIntent;
+        //TODO User Points
+        int currentPoints, currentLevel;
 
-        alarmMgr = (AlarmManager)getBaseContext().getSystemService(Context.ALARM_SERVICE);
-        Intent i = new Intent(getBaseContext(), AlarmReceiver.class);
-        alarmIntent = PendingIntent.getBroadcast(getBaseContext(), 1, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        tvPoints = findViewById(R.id.tv_points);
+        tvLevel = findViewById(R.id.tv_level);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 1);
+        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor dspEditor = dsp.edit();
 
-        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, alarmIntent);
+        currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
+        currentLevel = dsp.getInt(User.COLUMN_LEVEL, -1);
 
-        //alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-        //        AlarmManager.INTERVAL_DAY, alarmIntent);
-    }
-
-    //TODO update database and add snackbar notification
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        RecyclerView.Adapter adapter = rvTasks.getAdapter();
-
-        if(requestCode == 3 && resultCode == RESULT_OK) {
-
-            boolean isEdit = getIntent().getBooleanExtra("isEdit", false);
-
-            String title = data.getExtras().getString(Task.COLUMN_TITLE);
-            String desc = data.getExtras().getString(Task.COLUMN_DESC);
-            Date createDate = Calendar.getInstance().getTime();
-
-            String strDueDate = data.getExtras().getString(Task.COLUMN_DUEDATE);
-            Date dueDate = null;
-            SimpleDateFormat df = new SimpleDateFormat("MM-dd-yy");
-            try {
-                dueDate = df.parse(strDueDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            Date today = Calendar.getInstance().getTime();
-            if (compareTwoDates(today, dueDate) == 0) {
-                //alarmMgr = (AlarmManager)getBaseContext().getSystemService(Context.ALARM_SERVICE);
-                Intent i = new Intent(getBaseContext(), AlarmReceiver.class);
-                alarmIntent = PendingIntent.getBroadcast(getBaseContext(), 1, i, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 1*1000, alarmIntent);
-            }
-
-            boolean recurr = data.getExtras().getBoolean(Task.COLUMN_RECURR);
-
-            //TODO interface: add a category selection option, then add category to Task
-            //TODO long ID and Category ID
-            Task task = new Task(title, desc, strDueDate, createDate.toString(), categoryid, recurr);
-
-            if (isEdit) {
-                db.editTask(task, getIntent().getLongExtra(Task.COLUMN_ID, 0));
-                //TODO does this notify/update the recycler view?
-                adapter.notifyDataSetChanged();
-            }
-            else {
-                db.addTask(task);
-                //TODO does this notify/update the recycler view?
-                adapter.notifyItemInserted(adapter.getItemCount() - 1);
-            }
-            //TODO snackbar to show user it has been added: https://developer.android.com/training/snackbar/action.html
-
-        }
-
-        if(requestCode == 4 && resultCode == RESULT_OK) {
-
-        }
-
+        tvPoints.setText(Integer.toString(currentPoints));
+        tvLevel.setText("Level " + Integer.toString(currentLevel));
+        pgLevel.setProgress(currentPoints);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         ta.changeCursor(db.getAllTasksCursor(categoryid));
-    }
-    public static int compareTwoDates(Date startDate, Date endDate) {
-        /**
-         * return 1 if task is not overdue
-         * return -1 if task is overdue
-         * return 0 if task is due today
-         *
-         */
-        Date sDate = getZeroTimeDate(startDate);
-        Date eDate = getZeroTimeDate(endDate);
-        if (sDate.before(eDate)) {
-            return 1;
-        }
-        if (sDate.after(eDate)) {
-            return -1;
-        }
-        return 0;
-    }
 
-    private static Date getZeroTimeDate(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        date = calendar.getTime();
-        return date;
+        //TODO User Points
+        int currentPoints, currentLevel;
+
+        tvPoints = findViewById(R.id.tv_points);
+        tvLevel = findViewById(R.id.tv_level);
+
+        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor dspEditor = dsp.edit();
+
+        currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
+        currentLevel = dsp.getInt(User.COLUMN_LEVEL, -1);
+
+        tvPoints.setText(Integer.toString(currentPoints));
+        tvLevel.setText("Level " + Integer.toString(currentLevel));
+        pgLevel.setProgress(currentPoints);
     }
 
     protected void refresh(String priority, String order) {

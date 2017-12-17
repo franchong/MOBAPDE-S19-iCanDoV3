@@ -1,22 +1,21 @@
 package edu.dlsu.mobapde.icandov3;
 
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -31,6 +30,7 @@ public class SearchActivity extends AppCompatActivity {
     AutoCompleteTextView etSearch;
     SearchAdapter sa;
     RecyclerView rvSearch;
+    TextView tvPoints, tvLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +100,22 @@ public class SearchActivity extends AppCompatActivity {
                 startActivityForResult(i, 4);
             }
         });
+
+        //TODO User Points
+        int currentPoints, currentLevel;
+
+        tvPoints = findViewById(R.id.tv_points);
+        tvLevel = findViewById(R.id.tv_level);
+
+        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor dspEditor = dsp.edit();
+
+        currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
+        currentLevel = dsp.getInt(User.COLUMN_LEVEL, -1);
+
+        tvPoints.setText(Integer.toString(currentPoints));
+        tvLevel.setText("Level " + Integer.toString(currentLevel));
+        pgLevel.setProgress(currentPoints);
     }
 
         public void refresh( String search) {

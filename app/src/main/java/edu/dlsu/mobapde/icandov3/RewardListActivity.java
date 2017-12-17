@@ -1,23 +1,24 @@
 package edu.dlsu.mobapde.icandov3;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-
-import java.util.ArrayList;
 
 public class RewardListActivity extends AppCompatActivity {
 
@@ -28,6 +29,7 @@ public class RewardListActivity extends AppCompatActivity {
     FloatingActionButton fabCategory, fabTask, fabReward;
     DatabaseHelper dbHelper;
     RewardAdapter rewardAdapter;
+    TextView tvPoints, tvLevel;
 
 
     @Override
@@ -137,27 +139,22 @@ public class RewardListActivity extends AppCompatActivity {
                 startActivityForResult(i, 11);
             }
         });
-    }
 
-    //TODO update database and add snackbar notification
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        //TODO User Points
+        int currentPoints, currentLevel;
 
-        if(requestCode == 3 && resultCode == RESULT_OK) {
+        tvPoints = findViewById(R.id.tv_points);
+        tvLevel = findViewById(R.id.tv_level);
 
-        }
-        if (requestCode == 3 && resultCode == RESULT_CANCELED) {
+        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor dspEditor = dsp.edit();
 
-        }
+        currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
+        currentLevel = dsp.getInt(User.COLUMN_LEVEL, -1);
 
-        if(requestCode == 4 && resultCode == RESULT_OK) {
-
-        }
-        if (requestCode == 4 && resultCode == RESULT_CANCELED) {
-
-        }
-
+        tvPoints.setText(Integer.toString(currentPoints));
+        tvLevel.setText("Level " + Integer.toString(currentLevel));
+        pgLevel.setProgress(currentPoints);
     }
 
     @Override
@@ -169,9 +166,29 @@ public class RewardListActivity extends AppCompatActivity {
     public void update(boolean purchased) {
         rewardAdapter.changeCursor(dbHelper.getAllRewardCursor());
         if (purchased) {
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Reward is successfully purchased.", Snackbar.LENGTH_SHORT);
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Congratulations, You have purchased a reward", Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
+        else {
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "You need more points for this reward", Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }
+
+        //TODO User Points
+        int currentPoints, currentLevel;
+
+        tvPoints = findViewById(R.id.tv_points);
+        tvLevel = findViewById(R.id.tv_level);
+
+        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor dspEditor = dsp.edit();
+
+        currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
+        currentLevel = dsp.getInt(User.COLUMN_LEVEL, -1);
+
+        tvPoints.setText(Integer.toString(currentPoints));
+        tvLevel.setText("Level " + Integer.toString(currentLevel));
+        pgLevel.setProgress(currentPoints);
     }
 
     protected void refresh(String priority, String order) {

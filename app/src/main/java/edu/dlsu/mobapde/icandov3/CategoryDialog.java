@@ -31,7 +31,7 @@ public class CategoryDialog extends DialogFragment {
                 .inflate(R.layout.dialog_category, null);
         tvCategoryName = (TextView) v.findViewById(R.id.tv_categoryname);
         etTitle = (EditText) v.findViewById(R.id.et_title);
-        dbHelper = new DatabaseHelper(getContext());
+        dbHelper = new DatabaseHelper(v.getContext());
 
         AlertDialog.Builder builder
                 = new AlertDialog.Builder(getActivity())

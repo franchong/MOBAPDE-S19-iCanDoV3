@@ -1,28 +1,29 @@
 package edu.dlsu.mobapde.icandov3;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
-import java.util.ArrayList;
-import java.util.Locale;
+import java.util.Calendar;
 
 public class CategoryListActivity extends AppCompatActivity {
 
@@ -33,7 +34,9 @@ public class CategoryListActivity extends AppCompatActivity {
     FloatingActionButton fabCategory, fabTask, fabReward;
     CategoryAdapter ca;
     DatabaseHelper dbHelper;
-
+    AlarmManager alarmMgr;
+    PendingIntent alarmIntent;
+    TextView tvPoints, tvLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,26 +133,49 @@ public class CategoryListActivity extends AppCompatActivity {
             }
         });
 
-    }
+        //TODO Notification Alarm Integrated
+        alarmMgr = (AlarmManager)getBaseContext().getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(getBaseContext(), AlarmReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(getBaseContext(), 1, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
-    //TODO update database and add snackbar notification
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 1); //1AM //TODO test
 
-        if (requestCode == 3 && resultCode == RESULT_OK) {
+        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 1*1000, alarmIntent);
+        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, alarmIntent);
 
+        //TODO User Points
+        int currentPoints, currentLevel;
+
+        tvPoints = findViewById(R.id.tv_points);
+        tvLevel = findViewById(R.id.tv_level);
+
+        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor dspEditor = dsp.edit();
+
+        currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
+        if (currentPoints == -1) {
+            dspEditor.putInt(User.COLUMN_POINTS, 0);
+            currentPoints = 0;
         }
-        if (requestCode == 3 && resultCode == RESULT_CANCELED) {
-
+        currentLevel = dsp.getInt(User.COLUMN_LEVEL, -1);
+        if (currentLevel == -1) {
+            dspEditor.putInt(User.COLUMN_LEVEL, 1);
+            currentLevel = 1;
         }
+        dspEditor.apply();
 
-        if (requestCode == 4 && resultCode == RESULT_OK) {
+        tvPoints.setText(Integer.toString(currentPoints));
+        tvLevel.setText("Level " + Integer.toString(currentLevel));
+        pgLevel.setProgress(currentPoints);
 
-        }
-        if (requestCode == 4 && resultCode == RESULT_CANCELED) {
+//        Log.i("LOG currentpoints", Integer.toString(currentPoints));
+//        Log.i("LOG currentlevel", Integer.toString(currentLevel));
+//        Log.i("LOG actual points", String.valueOf(dsp.getInt(User.COLUMN_POINTS, -1)));
+//        Log.i("LOG actual level", String.valueOf(dsp.getInt(User.COLUMN_LEVEL, -1)));
 
-        }
     }
 
     public void refresh() {
@@ -157,5 +183,26 @@ public class CategoryListActivity extends AppCompatActivity {
         super.onResume();
         ca.changeCursor(dbHelper.getAllCategoriesCursor());
         ca.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //TODO User Points
+        int currentPoints, currentLevel;
+
+        tvPoints = findViewById(R.id.tv_points);
+        tvLevel = findViewById(R.id.tv_level);
+
+        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor dspEditor = dsp.edit();
+
+        currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
+        currentLevel = dsp.getInt(User.COLUMN_LEVEL, -1);
+
+        tvPoints.setText(Integer.toString(currentPoints));
+        tvLevel.setText("Level " + Integer.toString(currentLevel));
+        pgLevel.setProgress(currentPoints);
     }
 }

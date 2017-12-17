@@ -9,14 +9,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.ContactsContract;
 import android.util.Log;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.concurrent.locks.ReadWriteLock;
 
 /**
  * Created by G301 on 11/7/2017.
@@ -116,8 +111,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(Task.COLUMN_TITLE, task.getTitle());
         contentValues.put(Task.COLUMN_DESC, task.getDescription());
-        contentValues.put(Task.COLUMN_DUEDATE, String.valueOf(task.getDuedate()));
-        contentValues.put(Task.COLUMN_CREATIONDATE, String.valueOf(task.getCreatedate()));
+        contentValues.put(Task.COLUMN_DUEDATE, task.getDuedate());
+        contentValues.put(Task.COLUMN_CREATIONDATE, task.getCreatedate());
         contentValues.put(Task.COLUMN_CAT, task.getCategoryID());
         contentValues.put(Task.COLUMN_RECURR, task.isRecurr());
 

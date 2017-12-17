@@ -5,18 +5,13 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ViewRewardMenu extends DialogFragment {
@@ -27,7 +22,7 @@ public class ViewRewardMenu extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle saveInstanceState) {
-        View v = LayoutInflater.from(getActivity())
+        final View v = LayoutInflater.from(getActivity())
                 .inflate(R.layout.dialog_view_reward_menu, null);
 
         final DatabaseHelper db = new DatabaseHelper(v.getContext());
@@ -63,13 +58,33 @@ public class ViewRewardMenu extends DialogFragment {
                 .setPositiveButton("Purchase", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // if user has enough points
-                        if (!isRepeatable) {
-                            db.deleteReward(id);
-                            ((RewardListActivity)getActivity()).update(true);
-                        } else {
-                            ((RewardListActivity)getActivity()).update(true);
+                        //TODO User Points
+                        int currentPoints;
+                        //TODO v made final type
+                        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(v.getContext());
+                        SharedPreferences.Editor dspEditor = dsp.edit();
+
+                        currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
+
+                        if (currentPoints >= points) {
+                            // if user has enough points
+                            if (!isRepeatable) {
+                                db.deleteReward(id);
+                                ((RewardListActivity)getActivity()).update(true);
+                            } else {
+                                ((RewardListActivity)getActivity()).update(true);
+                            }
+
+                            currentPoints  = currentPoints - points;
+                            dspEditor.putInt(User.COLUMN_POINTS, currentPoints);
+                            dspEditor.apply();
                         }
+                        else {
+                            ((RewardListActivity)getActivity()).update(false);
+                        }
+
+
+
                         dismiss();
                     }
                 })

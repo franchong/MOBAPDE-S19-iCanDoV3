@@ -5,8 +5,11 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,7 +19,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 public class ViewTaskMenu extends DialogFragment {
 
@@ -27,7 +29,7 @@ public class ViewTaskMenu extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle saveInstanceState) {
-        View v = LayoutInflater.from(getActivity())
+        final View v = LayoutInflater.from(getActivity())
                 .inflate(R.layout.dialog_view_task_menu, null);
 
         final DatabaseHelper db = new DatabaseHelper(v.getContext());
@@ -106,6 +108,28 @@ public class ViewTaskMenu extends DialogFragment {
                         else {
                             db.deleteTask(id);
                         }
+
+                        //TODO User Points
+                        int currentPoints, currentLevel;
+
+
+                        //TODO made V as final
+                        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(v.getContext());
+                        SharedPreferences.Editor dspEditor = dsp.edit();
+
+                        currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
+                        currentLevel = dsp.getInt(User.COLUMN_LEVEL, -1);
+                        currentPoints += 5;
+                        if (currentPoints == 100) {
+                            currentLevel++;
+                            dspEditor.putInt(User.COLUMN_LEVEL, currentLevel);
+                            currentPoints = 0;
+                        }
+                        dspEditor.putInt(User.COLUMN_POINTS, currentPoints);
+                        dspEditor.apply();
+
+                        Log.i("LOG actual points", String.valueOf(dsp.getInt(User.COLUMN_POINTS, -1)));
+                        Log.i("LOG actual level", String.valueOf(dsp.getInt(User.COLUMN_LEVEL, -1)));
 
                         dismiss();
                     }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -16,10 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 public class AddEditTaskMenu extends AppCompatActivity {
 
@@ -159,34 +157,25 @@ public class AddEditTaskMenu extends AppCompatActivity {
             public void onClick(View v) {
                 Intent data = new Intent();
 
-                String name = etName.getText().toString();
-                String description = etDescription.getText().toString();
-                String date = tvDate.getText().toString();
                 boolean recurring = false;
-
                 if (ivRecurring.getTag().toString().equals("nonrecurring")) {
                     recurring = false;
                 }
                 else if (ivRecurring.getTag().toString().equals("recurring")) {
                     recurring = true;
                 }
-                /*
-                data.putExtra(Task.COLUMN_ID, getIntent().getLongExtra(Task.COLUMN_ID, 0));
-                data.putExtra(Task.COLUMN_TITLE, name);
-                data.putExtra(Task.COLUMN_DESC, description);
-                data.putExtra(Task.COLUMN_DUEDATE, date);
-                data.putExtra(Task.COLUMN_RECURR, recurring);
-                data.putExtra("isEdit", false);
-                */
+
                 long catergoryID = getIntent().getExtras().getLong("CategoryID");
 
                 Task task = new Task();
                 task.setTitle(etName.getText().toString());
                 task.setDescription(etDescription.getText().toString());
                 task.setCreatedate(Calendar.getInstance().getTime().toString());
-                task.setDuedate(date);
-
+                task.setDuedate(tvDate.getText().toString());
                 task.setCategoryID(catergoryID);
+                task.setRecurr(recurring);
+
+                Log.i("LOG EDTADDTASK DATE", tvDate.getText().toString());
 
                 dbHelper.addTask(task);
 
