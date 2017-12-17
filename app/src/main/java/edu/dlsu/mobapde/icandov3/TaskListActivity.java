@@ -142,6 +142,30 @@ public class TaskListActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        //TODO User Points
+                        int currentPoints, currentLevel;
+
+                        tvPoints = findViewById(R.id.tv_points);
+                        tvLevel = findViewById(R.id.tv_level);
+
+                        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                        SharedPreferences.Editor dspEditor = dsp.edit();
+
+                        currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
+                        currentLevel = dsp.getInt(User.COLUMN_LEVEL, -1);
+                        currentPoints += 5;
+                        if (currentPoints == 100) {
+                            currentLevel++;
+                            dspEditor.putInt(User.COLUMN_LEVEL, currentLevel);
+                            currentPoints = 0;
+                        }
+                        dspEditor.putInt(User.COLUMN_POINTS, currentPoints);
+                        dspEditor.apply();
+
+                        tvPoints.setText(Integer.toString(currentPoints));
+                        tvLevel.setText("Level " + Integer.toString(currentLevel));
+                        pgLevel.setProgress(currentPoints);
+
                         int position = viewHolder.getAdapterPosition();
                         tasks.remove(position);
                         ta.notifyDataSetChanged();
@@ -149,7 +173,7 @@ public class TaskListActivity extends AppCompatActivity {
 
                         AlertDialog alertDialog = new AlertDialog.Builder(TaskListActivity.this).create();
                         alertDialog.setTitle("Rewards");
-                        alertDialog.setMessage("You earned 10 points!");
+                        alertDialog.setMessage("You earned 5 points!");
                         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
@@ -157,6 +181,7 @@ public class TaskListActivity extends AppCompatActivity {
                                     }
                                 });
                         alertDialog.show();
+
                     }
                 });
 
