@@ -178,6 +178,7 @@ public class CategoryListActivity extends AppCompatActivity {
 
     }
 
+
     public void refresh() {
         Log.d("TAG", "IM BACK");
         super.onResume();

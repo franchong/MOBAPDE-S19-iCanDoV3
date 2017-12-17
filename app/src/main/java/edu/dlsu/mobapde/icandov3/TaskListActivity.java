@@ -165,9 +165,11 @@ public class TaskListActivity extends AppCompatActivity {
                         //Log.i("LOG viewholder", String.valueOf(viewHolder.getAdapterPosition()));
                         //Log.i("LOG viewholderID", String.valueOf(viewHolder.itemView.getTag()));
 
-                        db.deleteTask((Long) viewHolder.itemView.getTag());
-                        dialog.dismiss();
 
+                        db.deleteTask((Long) viewHolder.itemView.getTag());
+//                        int position = viewHolder.getAdapterPosition();
+//                        ta.notifyItemRemoved(position);
+                        dialog.dismiss();
 
 //                        int position = viewHolder.getAdapterPosition();
 //                        tasks.remove(position);
