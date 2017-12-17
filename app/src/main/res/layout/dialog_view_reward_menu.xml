@@ -6,20 +6,33 @@
     android:id="@+id/dialog_view_reward_menu"
     android:padding="20dp">
 
-    <TextView
-        android:id="@+id/tv_rewardname"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:text="Relax"
-        android:textSize="25sp"
-        android:textColor="#1c2c3b" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+
+        <TextView
+            android:id="@+id/tv_rewardname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="Sleep"
+            android:textSize="25sp"
+            android:textColor="#1c2c3b"/>
+
+        <ImageView
+            android:id="@+id/iv_repeatable"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/recurring"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="10dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Lorem ipsum dolor sit amet, consectur adipsicing elit Lorem ipsum dolor sit amet, consectur adipsicing elit"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:textColor="#292929"/>
 
 </LinearLayout>

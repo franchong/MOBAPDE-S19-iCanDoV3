@@ -5,9 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,14 +22,16 @@ public class ViewTaskMenu extends DialogFragment {
 
     ImageView ivRecurr;
     TextView tvTaskName, tvDaysLeft, tvDuedate, tvDay, tvDescription;
+    long categoryID;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle saveInstanceState) {
-        final View v = LayoutInflater.from(getActivity())
+        View v = LayoutInflater.from(getActivity())
                 .inflate(R.layout.dialog_view_task_menu, null);
 
         final DatabaseHelper db = new DatabaseHelper(v.getContext());
+
 
         tvTaskName = (TextView) v.findViewById(R.id.tv_taskname);
         tvDaysLeft = (TextView) v.findViewById(R.id.tv_daysleft);
@@ -41,14 +41,16 @@ public class ViewTaskMenu extends DialogFragment {
         ivRecurr = (ImageView) v.findViewById(R.id.ivRecurr) ;
 
         Bundle bundle = this.getArguments();
+        final long id = bundle.getLong("id_");
+
+        Task task = db.getTask(id);
         //if (bundle != null) {
-        final long id = bundle.getLong(Task.COLUMN_ID);
-        final String title = bundle.getString(Task.COLUMN_TITLE);
-        final String description = bundle.getString(Task.COLUMN_DESC);
-        final String strDuedate = bundle.getString(Task.COLUMN_DUEDATE);
-        final String strCreatedate = bundle.getString(Task.COLUMN_CREATIONDATE);
-        final long categoryID = bundle.getLong(Task.COLUMN_CAT);
-        final boolean isRecurr = bundle.getBoolean(Task.COLUMN_RECURR);
+        final String title = task.getTitle();
+        final String description = task.getDescription();
+        final String strDuedate = task.getDuedate();
+        final String strCreatedate = task.getCreatedate();
+        final long categoryID = task.getCategoryID();
+        final boolean isRecurr = task.isRecurr();
 
         tvTaskName.setText(title);
 
@@ -61,14 +63,17 @@ public class ViewTaskMenu extends DialogFragment {
             e.printStackTrace();
         }
         final Date startDateValue = Calendar.getInstance().getTime();
-        long diff = endDateValue.getTime() - startDateValue.getTime();
+        /*
+        long diff = endDateValue.getTime()
+                - startDateValue.getTime();
         int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
         tvDaysLeft.setText(days);
 
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
         String dayOfTheWeek = sdf.format(endDateValue);
-        tvDay.setText(dayOfTheWeek);
 
+        tvDay.setText(dayOfTheWeek);
+        */
         tvDuedate.setText(strDuedate);
 
         tvDescription.setText(description);
@@ -92,19 +97,10 @@ public class ViewTaskMenu extends DialogFragment {
                             cal.setTime(Calendar.getInstance().getTime());
                             cal.add(Calendar.DAY_OF_YEAR, 1);
                             Date dueDate = cal.getTime();
-                            Task t = new Task(title, description, dueDate, Calendar.getInstance().getTime(),
-                                    0, isRecurr);
+                            Task t = new Task(title, description, dueDate.toString(), Calendar.getInstance().getTime().toString(),
+                                    categoryID, isRecurr);
                             db.addTask(t);
                             db.deleteTask(id);
-                            SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(v.getContext());
-                            SharedPreferences.Editor dspEditor = dsp.edit(); // has write access
-                            int points = dsp.getInt(User.COLUMN_POINTS, -1);
-                            points ++;
-                            dspEditor.putInt(User.COLUMN_POINTS, points);
-                            dspEditor.apply();
-
-
-
                             //TODO how to notify/update adapter
                         }
                         else {

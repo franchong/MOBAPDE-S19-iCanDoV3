@@ -9,11 +9,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.locks.ReadWriteLock;
 
 /**
  * Created by G301 on 11/7/2017.
@@ -23,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     public static final String SCHEMA = "icandov3";
-    public static final int VERSION = 5;
+    public static final int VERSION = 7;
 
     public DatabaseHelper(Context context) {
         super(context, SCHEMA, null, VERSION);
@@ -40,10 +43,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + Task.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + Task.COLUMN_TITLE + " TEXT,"
                 + Task.COLUMN_DESC + " TEXT,"
-                + Task.COLUMN_DUEDATE + " DATE,"
-                + Task.COLUMN_CREATIONDATE + " DATE,"
+                + Task.COLUMN_DUEDATE + " TEXT,"
+                + Task.COLUMN_CREATIONDATE + " TEXT,"
                 + Task.COLUMN_CAT + " INTEGER,"
-                + Task.COLUMN_RECURR + "BOOLEAN"
+                + Task.COLUMN_RECURR + " BOOLEAN"
                 + ");";
         sqLiteDatabase.execSQL(sql);
 
@@ -60,14 +63,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + Reward.COLUMN_TITLE + " TEXT,"
                 + Reward.COLUMN_DESC + " TEXT,"
                 + Reward.COLUMN_POINTS + " INTEGER,"
-                + Reward.COLUMN_REPEATABLE + " BOOLEAN"
+                + Reward.COLUMN_REPEATABLE+ " BOOLEAN"
                 + ");";
         sqLiteDatabase.execSQL(sql);
-
-
-
-
-        // public Task(String title, String description, Date duedate, Date createdate, long categoryID, boolean isRecurr) {
+ // public Task(String title, String description, Date duedate, Date createdate, long categoryID, boolean isRecurr) {
     }
 
     @Override
@@ -90,9 +89,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // call onCreate
         onCreate(sqLiteDatabase);
     }
-
     //add Task
-    public long addTask(Task task) {
+    public long addTask(Task task){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -107,12 +105,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null,
                 contentValues);
         db.close();
+        Log.d("TAG", "TASK WITH TITLE " +task.getTitle() + " id: " +id);
         return id;
 
     }
 
     // add Task
-    public long addTask(Task task, SQLiteDatabase db) {
+    public long addTask(Task task, SQLiteDatabase db){
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(Task.COLUMN_TITLE, task.getTitle());
@@ -126,13 +125,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null,
                 contentValues);
 
-        Log.d("TAG", "TASK WITH TITLE " + task.getTitle());
+
         db.close();
         return id;
     }
-
     // add Category
-    public long addCategory(Category category) {
+    public long addCategory(Category category){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -142,11 +140,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null,
                 contentValues);
         db.close();
+        Log.d("TAG", "TASK WITH TITLE " +category.getName() + " id: " +id);
         return id;
     }
-
     // add Category
-    public long addCategory(Category category, SQLiteDatabase db) {
+    public long addCategory(Category category, SQLiteDatabase db){
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(Category.COLUMN_NAME, category.getName());
@@ -158,7 +156,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public long addReward(Reward rewards) {
+    public long addReward(Reward rewards){
 
         SQLiteDatabase db = getReadableDatabase();
 
@@ -174,9 +172,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return id;
     }
-
     //editTask
-    public boolean editTask(Task newtask, long currentId) {
+    public boolean editTask(Task newtask, long currentId){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -190,14 +187,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int rowsAffected = db.update(Task.TABLE_NAME,
                 contentValues,
                 Task.COLUMN_ID + "=?",
-                new String[]{newtask.getId() + ""});
+                new String[]{newtask.getId()+""});
         db.close();
 
-        return rowsAffected > 0;
+        return rowsAffected >0;
     }
 
     //editCategory
-    public boolean editCategory(Category category, long currentId) {
+    public boolean editCategory(Category category,long currentId){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -206,14 +203,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int rowsAffected = db.update(Category.TABLE_NAME,
                 contentValues,
                 Category.COLUMN_ID + "=?",
-                new String[]{category.getId() + ""});
+                new String[]{category.getId()+""});
         db.close();
 
-        return rowsAffected > 0;
+        return rowsAffected >0;
     }
 
     //editCategory
-    public boolean editCategory(Category category, int currentId) {
+    public boolean editCategory(Category category, int currentId){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -222,95 +219,81 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int rowsAffected = db.update(Category.TABLE_NAME,
                 contentValues,
                 Category.COLUMN_ID + "=?",
-                new String[]{category.getId() + ""});
+                new String[]{category.getId()+""});
         db.close();
 
-        return rowsAffected > 0;
+        return rowsAffected >0;
     }
-
-    public boolean editReward(Reward rewards, int currentId) {
+    // edit reward
+    public boolean editReward(Reward reward, long currentId){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Reward.COLUMN_TITLE, rewards.getTitle());
-        contentValues.put(Reward.COLUMN_DESC, rewards.getDescription());
-        contentValues.put(Reward.COLUMN_POINTS, rewards.getPoints());
-        contentValues.put(Reward.COLUMN_REPEATABLE, rewards.isRepeatable());
+        contentValues.put(Reward.COLUMN_TITLE, reward.getTitle());
+        contentValues.put(Reward.COLUMN_DESC, reward.getDescription());
+        contentValues.put(Reward.COLUMN_POINTS, reward.getPoints());
+        contentValues.put(Reward.COLUMN_REPEATABLE, reward.isRepeatable());
+
+        Log.i("id", String.valueOf(currentId));
+        Log.i("title", reward.getTitle());
 
         int rowsAffected = db.update(Reward.TABLE_NAME,
                 contentValues,
                 Reward.COLUMN_ID + "=?",
-                new String[]{rewards.getId() + ""});
+                new String[]{String.valueOf(currentId)});
         db.close();
 
-        return rowsAffected > 0;
+        return rowsAffected >0;
     }
 
 
     // deleteTask
-    public boolean deleteTask(long id) {
+    public boolean deleteTask(long id){
         SQLiteDatabase db = getWritableDatabase();
         int rowsAffected = db.delete(Task.TABLE_NAME,
                 Task.COLUMN_ID + "=?",
-                new String[]{id + ""});
+                new String[]{id+""} );
         db.close();
-        return rowsAffected > 0;
+        return rowsAffected >0;
     }
-
     // deleteCategory
-    public boolean deleteCategory(long id) {
+    public boolean deleteCategory(long id){
         SQLiteDatabase db = getWritableDatabase();
         int rowsAffected = db.delete(Category.TABLE_NAME,
                 Category.COLUMN_ID + "=?",
-                new String[]{id + ""});
+                new String[]{id+""} );
         db.close();
-        return rowsAffected > 0;
+        return rowsAffected >0;
     }
-
     // deleteReward
-    public boolean deleteReward(long id) {
+    public boolean deleteReward(long id){
         SQLiteDatabase db = getWritableDatabase();
         int rowsAffected = db.delete(Reward.TABLE_NAME,
                 Reward.COLUMN_ID + "=?",
-                new String[]{id + ""});
+                new String[]{id+""} );
         db.close();
-        return rowsAffected > 0;
+        return rowsAffected >0;
     }
 
     // getTask
     // getTask
-    public Task getTask(long id) {
+    public Task getTask(long id){
         SQLiteDatabase db = getReadableDatabase();
         SimpleDateFormat df = new SimpleDateFormat("MM-dd-yy");
         Cursor c = db.query(Task.TABLE_NAME,
                 null,
                 Task.COLUMN_ID + "=?",
-                new String[]{id + ""},
+                new String[]{ id+"" },
                 null,
                 null,
                 null);
         Task t = null;
-        if (c.moveToFirst()) {
+        if(c.moveToFirst()){
             t = new Task();
             t.setTitle(c.getString(c.getColumnIndex(Task.COLUMN_TITLE)));
             t.setDescription(c.getString(c.getColumnIndex(Task.COLUMN_DESC)));
-            String date = c.getString(c.getColumnIndex(Task.COLUMN_DUEDATE));
-            Date dd = null;
-            try {
-                dd = df.parse(date);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            t.setDuedate(dd);
-
-            String credate = c.getString(c.getColumnIndex(Task.COLUMN_CREATIONDATE));
-            Date cd = null;
-            try {
-                cd = df.parse(credate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            t.setCreatedate(cd);
+            t.setDuedate(c.getString(c.getColumnIndex(Task.COLUMN_DUEDATE)));
+            t.setCreatedate(c.getString(c.getColumnIndex(Task.COLUMN_CREATIONDATE)));
             t.setRecurr(c.getInt(c.getColumnIndex(Task.COLUMN_RECURR)) > 0);
             t.setCategoryID(c.getLong(c.getColumnIndex(Task.COLUMN_CAT)));
             t.setId(id);
@@ -321,19 +304,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return t;
     }
-
     // getCategory
-    public Category getCategory(long id) {
+    public Category getCategory(long id){
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(Category.TABLE_NAME,
                 null,
                 Category.COLUMN_ID + "=?",
-                new String[]{id + ""},
+                new String[]{ id+"" },
                 null,
                 null,
                 null);
         Category k = null;
-        if (c.moveToFirst()) {
+        if(c.moveToFirst()){
             k = new Category();
             k.setName(c.getString(c.getColumnIndex(Category.COLUMN_NAME)));
             k.setId(id);
@@ -344,75 +326,80 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return k;
     }
-
-    // getReward
-    public Reward getReward(long id) {
+    /// getReward
+    public Reward getReward(long id){
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(Reward.TABLE_NAME,
                 null,
                 Reward.COLUMN_ID + "=?",
-                new String[]{id + ""},
+                new String[]{ id+"" },
                 null,
                 null,
                 null);
-        Reward t = null;
-        if (c.moveToFirst()) {
-            t = new Reward();
-            t.setTitle(c.getString(c.getColumnIndex(Reward.COLUMN_TITLE)));
-            t.setDescription(c.getString(c.getColumnIndex(Reward.COLUMN_DESC)));
-            // t.setRepeatable(c.get(c.getColumnIndex(Reward.COLUMN_REPEATABLE)));
-            //t.setRecurring(c.getBoolean(c.getColumnIndex(Reward.COLUMN_RECURR)));
-            t.setId(id);
+        Reward r = null;
+        if(c.moveToFirst()){
+            r = new Reward();
+            r.setTitle(c.getString(c.getColumnIndex(Reward.COLUMN_TITLE)));
+            r.setDescription(c.getString(c.getColumnIndex(Reward.COLUMN_DESC)));
+            r.setPoints(c.getInt(c.getColumnIndex(Reward.COLUMN_POINTS)));
+            int i = c.getInt(c.getColumnIndex(Reward.COLUMN_REPEATABLE));
+            if (i == 0) {
+                r.setRepeatable(false);
+            } else {
+                r.setRepeatable(true);
+            }
+            r.setId(id);
         }
 
         c.close();
         db.close();
 
-        return t;
+        return r;
     }
 
     // getAllTasks
     public Cursor getAllTasksCursor(String PRIORITY, String SORT, long c) {
-        return getReadableDatabase().query(Task.TABLE_NAME, null, Task.COLUMN_CAT + "=?", new String[]{c + ""}, null, null, PRIORITY + " " + SORT);
+        return getReadableDatabase().query(Task.TABLE_NAME, null, Task.COLUMN_CAT +"=?", new String[]{ c+""}, null, null, PRIORITY+" "+ SORT);
     }
 
     public Cursor getAllTasksCursor(long c) {
 
-        return getReadableDatabase().query(Task.TABLE_NAME, null, Task.COLUMN_CAT + "=?", new String[]{c + ""}, null, null, null);
+        return getReadableDatabase().query(Task.TABLE_NAME, null,Task.COLUMN_CAT +"=?",new String[]{ c+""},null,null,null);
     }
 
     // getAllCategories
-    public Cursor getAllCategoriesCursor(String PRIORITY, String SORT) {
-        return getReadableDatabase().query(Category.TABLE_NAME, null, null, null, null, null, PRIORITY + " " + SORT);
+    public Cursor getAllCategoriesCursor(String PRIORITY, String SORT){
+        return getReadableDatabase().query(Category.TABLE_NAME, null,null,null,null,null, PRIORITY+" "+SORT);
     }
 
     // getAllCategories
-    public Cursor getAllCategoriesCursor() {
-        return getReadableDatabase().query(Category.TABLE_NAME, null, null, null, null, null, null);
+    public Cursor getAllCategoriesCursor(){
+        return getReadableDatabase().query(Category.TABLE_NAME, null,null,null,null,null,null);
     }
 
     // getAllReward
-    public Cursor getAllRewardCursor(String PRIORITY, String SORT) {
-        return getReadableDatabase().query(Reward.TABLE_NAME, null, null, null, null, null, PRIORITY + " " + SORT);
+    public Cursor getAllRewardCursor(String PRIORITY, String SORT){
+        return getReadableDatabase().query(Reward.TABLE_NAME, null,null,null,null,null, PRIORITY+" "+SORT);
     }
 
-    public Cursor getAllRewardCursor() {
-        return getReadableDatabase().query(Reward.TABLE_NAME, null, null, null, null, null, null);
+    public Cursor getAllRewardCursor(){
+        return getReadableDatabase().query(Reward.TABLE_NAME, null,null,null,null,null,null);
     }
 
     public Cursor getSearchReward(String s) {
-        return getReadableDatabase().query(Reward.TABLE_NAME, null, Reward.COLUMN_TITLE + "=?", new String[]{s}, null, null, null);
+        return getReadableDatabase().query(Reward.TABLE_NAME, null,Reward.COLUMN_TITLE +"=?",new String[]{s},null,null, null);
     }
 
     public Cursor getSearchTask(String s) {
-        return getReadableDatabase().query(Task.TABLE_NAME, null, Task.COLUMN_TITLE + "=?", new String[]{s}, null, null, null);
+        return getReadableDatabase().query(Task.TABLE_NAME, null,Task.COLUMN_TITLE +"=?",new String[]{s},null,null, null);
     }
 
     public Cursor getSearchCategory(String s) {
         return getReadableDatabase().query(Category.TABLE_NAME, null,Category.COLUMN_NAME +"=?",new String[]{s},null,null, null);
     }
 
-    public Cursor getAllTasksCursor () {
-        return getReadableDatabase().query(Task.TABLE_NAME, null, null,null, null, null, null);
+    public Cursor getAllTasksCursor(){
+        return getReadableDatabase().query(Task.TABLE_NAME, null,null,null,null,null,null);
     }
+
 }

@@ -7,12 +7,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,8 +44,6 @@ public class TaskListActivity extends AppCompatActivity {
     TextView tvCategory;
     TaskAdapter ta;
     long categoryid = -1;
-    TextView tvPoints;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,21 +104,10 @@ public class TaskListActivity extends AppCompatActivity {
         ta = new TaskAdapter(getBaseContext(), db.getAllTasksCursor(categoryid));
         ta.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(Task t) {
+            public void onItemClick(long r) {
 
-                //TODO parsing date might cause error
                 Bundle bundle = new Bundle();
-                bundle.putString(Task.COLUMN_TITLE, t.getTitle());
-                bundle.putString(Task.COLUMN_DESC, t.getDescription());
-                SimpleDateFormat df = new SimpleDateFormat("MM-dd-yy");
-                String strDueDate = df.format(t.getDuedate());
-                String strCreateDate = df.format(t.getCreatedate());
-
-                bundle.putString(Task.COLUMN_CREATIONDATE, strCreateDate);
-                bundle.putString(Task.COLUMN_DUEDATE, strDueDate);
-                bundle.putLong(Task.COLUMN_CAT, t.getCategoryID());
-                bundle.putLong(Task.COLUMN_ID, t.getId());
-                bundle.putBoolean(Task.COLUMN_RECURR, t.isRecurr());
+                bundle.putLong("id_", r);
 
                 ViewTaskMenu sd = new ViewTaskMenu();
                 sd.setArguments(bundle);
@@ -219,6 +204,7 @@ public class TaskListActivity extends AppCompatActivity {
                 i.setAction(Intent.ACTION_CALL);
                 i.setClass(getBaseContext(), AddEditTaskMenu.class);
                 i.putExtra("isEdit", false);
+                i.putExtra("CategoryID", categoryid);
                 startActivityForResult(i, 8);
             }
         });
@@ -288,7 +274,7 @@ public class TaskListActivity extends AppCompatActivity {
 
             //TODO interface: add a category selection option, then add category to Task
             //TODO long ID and Category ID
-            Task task = new Task(title, desc, dueDate, createDate, categoryid, recurr);
+            Task task = new Task(title, desc, strDueDate, createDate.toString(), categoryid, recurr);
 
             if (isEdit) {
                 db.editTask(task, getIntent().getLongExtra(Task.COLUMN_ID, 0));
@@ -308,23 +294,13 @@ public class TaskListActivity extends AppCompatActivity {
 
         }
 
-        //TODO User Shared Preferences
-        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        SharedPreferences.Editor dspEditor = dsp.edit();
-        int currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
-        if (currentPoints == -1) {
-            dspEditor.putInt(User.COLUMN_POINTS, 0);
-        }
-        dspEditor.apply();
-        tvPoints = (TextView) findViewById(R.id.tv_points);
-
-        tvPoints.setText(Integer.toString(currentPoints));
-        pgLevel.setProgress(currentPoints);
-
-        Log.i("LOG POINTS", String.valueOf(dsp.getInt(User.COLUMN_POINTS, -1)));
-
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ta.changeCursor(db.getAllTasksCursor(categoryid));
+    }
     public static int compareTwoDates(Date startDate, Date endDate) {
         /**
          * return 1 if task is not overdue

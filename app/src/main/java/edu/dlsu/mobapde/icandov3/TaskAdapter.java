@@ -3,6 +3,7 @@ package edu.dlsu.mobapde.icandov3;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,35 +48,25 @@ public class TaskAdapter extends CursorRecyclerViewAdapter<TaskAdapter.TaskViewH
     @Override
     public void onBindViewHolder(final TaskViewHolder viewHolder, final Cursor cursor) {
         //TODO unsure Date data
-        Date endDateValue = null;
-        String strEndDate = cursor.getString(cursor.getColumnIndex(Task.COLUMN_DUEDATE));
-        SimpleDateFormat df = new SimpleDateFormat("MM-dd-yy");
-        try {
-            endDateValue = df.parse(strEndDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Date startDateValue = Calendar.getInstance().getTime();
-        long diff = endDateValue.getTime() - startDateValue.getTime();
-        int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-        viewHolder.tvRight.setText(days);
-
-        String left = cursor.getColumnName(cursor.getColumnIndex(Task.COLUMN_TITLE));
+        long id = cursor.getLong(cursor.getColumnIndex(Task.COLUMN_ID));
+        String left = cursor.getString(cursor.getColumnIndex(Task.COLUMN_TITLE));
         viewHolder.tvLeft.setText(left);
 
         viewHolder.ivMenu.setImageResource(R.drawable.menu);
+        viewHolder.itemView.setTag(id);
+
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notifyItemChanged(viewHolder.getAdapterPosition());
+                onItemClickListener.onItemClick((Long) v.getTag());
             }
         });
 
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(Task t);
+        public void onItemClick(long r);
     }
 
     private OnItemClickListener onItemClickListener;
@@ -83,6 +74,4 @@ public class TaskAdapter extends CursorRecyclerViewAdapter<TaskAdapter.TaskViewH
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
-
-
 }

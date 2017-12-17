@@ -1,18 +1,22 @@
 package edu.dlsu.mobapde.icandov3;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.database.Cursor;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -98,36 +102,36 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    public void refresh( String search) {
+        public void refresh( String search) {
 
-        Log.d("TAG", "Searching for " + search);
-        super.onResume();
-        sa = new SearchAdapter(getBaseContext(), dbHelper.getSearchCategory(search));
-        sa.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
+            Log.d("TAG", "Searching for " + search);
+            super.onResume();
+                sa = new SearchAdapter(getBaseContext(), dbHelper.getSearchCategory(search));
+                sa.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
 
-            @Override
-            public void onItemClick(Long c) {
-                //TODO lead the user to the taskListActivity with the correct category
-                Log.d("TAG", "Here in Search Activity");
-                Log.d("TAG", "Item is clicked");
-                Intent intent = new Intent();
-                intent.setClass(getBaseContext(), CategoryListActivity.class);
+                    @Override
+                    public void onItemClick(Long c) {
+                        //TODO lead the user to the taskListActivity with the correct category
+                        Log.d("TAG", "Here in Search Activity");
+                        Log.d("TAG", "Item is clicked");
+                        Intent intent = new Intent();
+                        intent.setClass(getBaseContext(), TaskListActivity.class);
 
-                intent.putExtra("itemID", c);
-                Log.d("TAG", "ID IS :" + c + "");
+                        intent.putExtra("CategoryID", c);
+                        Log.d("TAG", "ID IS :" + c + "");
 
-                etSearch.setText("");
-                startActivity(intent);
+                        etSearch.setText("");
+                        startActivity(intent);
 
+                    }
+                });
+                rvSearch.setAdapter(sa);
+
+                rvSearch.setLayoutManager(new LinearLayoutManager(
+                        getBaseContext(), LinearLayoutManager.VERTICAL, false
+                ));
             }
-        });
-        rvSearch.setAdapter(sa);
 
-        rvSearch.setLayoutManager(new LinearLayoutManager(
-                getBaseContext(), LinearLayoutManager.VERTICAL, false
-        ));
     }
-
-}
 
 

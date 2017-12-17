@@ -16,7 +16,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class AddEditTaskMenu extends AppCompatActivity {
 
@@ -25,6 +28,7 @@ public class AddEditTaskMenu extends AppCompatActivity {
     ImageView ivRecurring, ivDate;
     Button btnCancel, btnSave;
     EditText etName, etDescription;
+    DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,8 @@ public class AddEditTaskMenu extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_gradient));
+
+        dbHelper = new DatabaseHelper(getBaseContext());
 
         pgLevel = findViewById(R.id.pg_bar);
         pgLevel.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#11ffb6")));
@@ -153,9 +159,9 @@ public class AddEditTaskMenu extends AppCompatActivity {
             public void onClick(View v) {
                 Intent data = new Intent();
 
-                String name = etName.getText().toString().trim();
-                String description = etDescription.getText().toString().trim();
-                String date = tvDate.getText().toString().trim();
+                String name = etName.getText().toString();
+                String description = etDescription.getText().toString();
+                String date = tvDate.getText().toString();
                 boolean recurring = false;
 
                 if (ivRecurring.getTag().toString().equals("nonrecurring")) {
@@ -164,13 +170,25 @@ public class AddEditTaskMenu extends AppCompatActivity {
                 else if (ivRecurring.getTag().toString().equals("recurring")) {
                     recurring = true;
                 }
-
+                /*
                 data.putExtra(Task.COLUMN_ID, getIntent().getLongExtra(Task.COLUMN_ID, 0));
                 data.putExtra(Task.COLUMN_TITLE, name);
                 data.putExtra(Task.COLUMN_DESC, description);
                 data.putExtra(Task.COLUMN_DUEDATE, date);
                 data.putExtra(Task.COLUMN_RECURR, recurring);
                 data.putExtra("isEdit", false);
+                */
+                long catergoryID = getIntent().getExtras().getLong("CategoryID");
+
+                Task task = new Task();
+                task.setTitle(etName.getText().toString());
+                task.setDescription(etDescription.getText().toString());
+                task.setCreatedate(Calendar.getInstance().getTime().toString());
+                task.setDuedate(date);
+
+                task.setCategoryID(catergoryID);
+
+                dbHelper.addTask(task);
 
                 setResult(RESULT_OK, data);
                 finish();

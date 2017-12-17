@@ -21,13 +21,13 @@ public class Task {
     private long id;
     private String title;
     private String description;
-    private Date duedate;
-    private Date createdate;
+    private String duedate;
+    private String createdate;
     private long categoryID;
     public boolean isRecurr;
 
     public Task () {}
-    public Task(String title, String description, Date duedate, Date createdate, long categoryID, boolean isRecurr) {
+    public Task(String title, String description, String duedate, String createdate, long categoryID, boolean isRecurr) {
         this.title = title;
         this.description = description;
         this.duedate = duedate;
@@ -68,19 +68,19 @@ public class Task {
         this.description = description;
     }
 
-    public Date getDuedate() {
+    public String getDuedate() {
         return duedate;
     }
 
-    public void setDuedate(Date duedate) {
+    public void setDuedate(String duedate) {
         this.duedate = duedate;
     }
 
-    public Date getCreatedate() {
+    public String getCreatedate() {
         return createdate;
     }
 
-    public void setCreatedate(Date createdate) {
+    public void setCreatedate(String createdate) {
         this.createdate = createdate;
     }
 

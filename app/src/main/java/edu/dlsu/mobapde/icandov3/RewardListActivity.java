@@ -1,20 +1,18 @@
 package edu.dlsu.mobapde.icandov3;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -29,9 +27,7 @@ public class RewardListActivity extends AppCompatActivity {
     FloatingActionMenu floatingActionMenu;
     FloatingActionButton fabCategory, fabTask, fabReward;
     DatabaseHelper dbHelper;
-    RewardAdapter ra;
-    String priority, order;
-    TextView tvPoints;
+    RewardAdapter rewardAdapter;
 
 
     @Override
@@ -42,7 +38,6 @@ public class RewardListActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_gradient));
 
-
         pgLevel = findViewById(R.id.pg_bar);
         pgLevel.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#11ffb6")));
 
@@ -52,8 +47,7 @@ public class RewardListActivity extends AppCompatActivity {
 
         llSearch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent i = new Intent();
+            public void onClick(View view) { Intent i = new Intent();
                 i.setAction(Intent.ACTION_CALL);
                 i.setClass(getBaseContext(), SearchActivity.class);
                 startActivityForResult(i, 0);
@@ -63,8 +57,8 @@ public class RewardListActivity extends AppCompatActivity {
         llSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SortRewardsDialog sortDialog = new SortRewardsDialog();
-                sortDialog.show(getFragmentManager(), "");
+                SortRewardsDialog sd = new SortRewardsDialog();
+                sd.show(getFragmentManager(), "");
             }
         });
 
@@ -75,6 +69,7 @@ public class RewardListActivity extends AppCompatActivity {
                 i.setAction(Intent.ACTION_CALL);
                 i.setClass(getBaseContext(), CategoryListActivity.class);
                 startActivityForResult(i, 0);
+
             }
         });
 
@@ -82,24 +77,36 @@ public class RewardListActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(getBaseContext());
 
-        ra = new RewardAdapter(getBaseContext(), dbHelper.getAllRewardCursor());
 
-        rvRewards.setAdapter(ra);
+        rewardAdapter = new RewardAdapter(getBaseContext(), dbHelper.getAllRewardCursor());
+
+        rewardAdapter.setOnItemClickListener(new RewardAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Long r) {
+
+                Bundle bundle = new Bundle();
+                bundle.putLong("id_", r);
+
+                ViewRewardMenu sd = new ViewRewardMenu();
+                sd.setArguments(bundle);
+
+                sd.show(getFragmentManager(), "");
+
+            }
+        });
+
+        rvRewards.setAdapter(rewardAdapter);
+
+        rvRewards.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         rvRewards.setLayoutManager(new LinearLayoutManager(
                 getBaseContext(), LinearLayoutManager.VERTICAL, false
         ));
-
-        final ArrayList<Reward> rewards = new ArrayList<>();
-
-        //rewards.add(new Reward("Relax", "Lorem ipsum dolor sit amet, consectur adipsicing elit", 25, true));
-
-        ra.setOnItemClickListener(new RewardAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Reward r) {
-
-            }
-        });
 
         floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_menu);
         fabCategory = (FloatingActionButton) findViewById(R.id.fab_category);
@@ -108,7 +115,6 @@ public class RewardListActivity extends AppCompatActivity {
 
         fabCategory.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //TODO something when floating action menu first item clicked
                 CategoryDialog sd = new CategoryDialog();
                 sd.show(getFragmentManager(), "");
             }
@@ -116,7 +122,6 @@ public class RewardListActivity extends AppCompatActivity {
 
         fabTask.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //TODO something when floating action menu second item clicked
                 Intent i = new Intent();
                 i.setAction(Intent.ACTION_CALL);
                 i.setClass(getBaseContext(), AddEditTaskMenu.class);
@@ -126,26 +131,47 @@ public class RewardListActivity extends AppCompatActivity {
 
         fabReward.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //TODO something when floating action menu third item clicked
                 Intent i = new Intent();
                 i.setAction(Intent.ACTION_CALL);
                 i.setClass(getBaseContext(), AddEditRewardMenu.class);
                 startActivityForResult(i, 11);
             }
         });
+    }
 
-        //TODO User Shared Preferences
-        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        SharedPreferences.Editor dspEditor = dsp.edit();
-        int currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
-        if (currentPoints == -1) {
-            dspEditor.putInt(User.COLUMN_POINTS, 0);
+    //TODO update database and add snackbar notification
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 3 && resultCode == RESULT_OK) {
+
         }
-        dspEditor.apply();
-        tvPoints = (TextView) findViewById(R.id.tv_points);
+        if (requestCode == 3 && resultCode == RESULT_CANCELED) {
 
-        tvPoints.setText(Integer.toString(currentPoints));
-        pgLevel.setProgress(currentPoints);
+        }
+
+        if(requestCode == 4 && resultCode == RESULT_OK) {
+
+        }
+        if (requestCode == 4 && resultCode == RESULT_CANCELED) {
+
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        rewardAdapter.changeCursor(dbHelper.getAllRewardCursor());
+    }
+
+    public void update(boolean purchased) {
+        rewardAdapter.changeCursor(dbHelper.getAllRewardCursor());
+        if (purchased) {
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Reward is successfully purchased.", Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }
     }
 
     protected void refresh(String priority, String order) {
@@ -168,6 +194,6 @@ public class RewardListActivity extends AppCompatActivity {
             ord = "DESC";
 
         Log.d("TAG", prio + " " + ord);
-        ra.changeCursor(dbHelper.getAllRewardCursor(prio, ord));
+        rewardAdapter.changeCursor(dbHelper.getAllRewardCursor(prio, ord));
     }
 }

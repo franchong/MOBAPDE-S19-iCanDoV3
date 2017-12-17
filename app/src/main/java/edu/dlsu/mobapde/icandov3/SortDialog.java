@@ -36,34 +36,34 @@ public class SortDialog extends DialogFragment {
 
         AlertDialog.Builder builder
                 = new AlertDialog.Builder(getActivity())
-                .setView(v)
-                .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        int indexPriority = radioGroupPriority.getCheckedRadioButtonId();
-                        int indexOrder = radioGroupOrder.getCheckedRadioButtonId();
+                    .setView(v)
+                    .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            int indexPriority = radioGroupPriority.getCheckedRadioButtonId();
+                            int indexOrder = radioGroupOrder.getCheckedRadioButtonId();
 
-                        RadioButton priority = v.findViewById(indexPriority);
-                        RadioButton order = v.findViewById(indexOrder);
+                            RadioButton priority = v.findViewById(indexPriority);
+                            RadioButton order = v.findViewById(indexOrder);
 
 
-                        String p = priority.getText().toString();
-                        String o = order.getText().toString();
-                        if(p != null && o != null) {
-                            Log.d("TAG", priority.getText().toString());
-                            Log.d("TAG", order.getText().toString());
+                            String p = priority.getText().toString();
+                            String o = order.getText().toString();
+                            if(p != null && o != null) {
+                                Log.d("TAG", priority.getText().toString());
+                                Log.d("TAG", order.getText().toString());
 
-                            ((TaskListActivity) getActivity()).refresh(p, o);
+                                ((TaskListActivity) getActivity()).refresh(p, o);
+                            }
+                            dismiss();
                         }
-                        dismiss();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dismiss();
-                    }
-                });
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dismiss();
+                        }
+                    });
 
         return builder.create();
     }

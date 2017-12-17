@@ -4,16 +4,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class AddEditRewardMenu extends AppCompatActivity {
 
@@ -44,8 +48,30 @@ public class AddEditRewardMenu extends AppCompatActivity {
         ivRepeatable   = findViewById(R.id.iv_repeatable);
 
         dbHelper = new DatabaseHelper(getBaseContext());
+        final boolean isEdit = getIntent().getBooleanExtra("isEdit", false);
 
-        ivRepeatable.setTag("false");
+        if (isEdit) {
+
+            etName.setText(getIntent().getStringExtra(Reward.COLUMN_TITLE));
+            etDescription.setText(getIntent().getStringExtra(Reward.COLUMN_DESC));
+            int p = getIntent().getIntExtra(Reward.COLUMN_POINTS, 0);
+            etPoints.setText(String.valueOf(p));
+
+            boolean isRepeatable = getIntent().getBooleanExtra(Reward.COLUMN_REPEATABLE, true);
+
+            if (!isRepeatable) {
+                ivRepeatable.setImageResource(R.drawable.nonrecurring);
+                ivRepeatable.setTag("false");
+            } else {
+                ivRepeatable.setImageResource(R.drawable.recurring);
+                ivRepeatable.setTag("true");
+            }
+
+        } else {
+
+            ivRepeatable.setTag("false");
+
+        }
 
         ivRepeatable.setOnClickListener(new View.OnClickListener() {
 
@@ -71,7 +97,8 @@ public class AddEditRewardMenu extends AppCompatActivity {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                setResult(RESULT_CANCELED);
+                finish();
             }
         });
 
@@ -79,19 +106,35 @@ public class AddEditRewardMenu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Reward reward = new Reward();
+                Reward reward;
 
-                if (etName.getText() != null) {
+
+                if (isEdit) {
+                    long id = getIntent().getLongExtra("id_", 1);
+
+                    reward = dbHelper.getReward(id);
+                } else {
+                    reward = new Reward();
+                }
+
+
+                if (etName.getText().toString() != "" && etPoints.getText().toString() != "") {
 
                     reward.setTitle(etName.getText().toString());
                     reward.setDescription(etDescription.getText().toString());
+                    reward.setPoints(Integer.parseInt(String.valueOf(etPoints.getText())));
                     if (ivRepeatable.getTag().toString().equals("false"))
                         reward.setRepeatable(false);
                     else
                         reward.setRepeatable(true);
                     reward.setPoints(Integer.parseInt(etPoints.getText().toString()));
 
-                    dbHelper.addReward(reward);
+                    if (!isEdit) {
+                        dbHelper.addReward(reward);
+                    } else {
+                        boolean edited = dbHelper.editReward(reward, reward.getId());
+                        Log.i("edited", String.valueOf(edited));
+                    }
 
                     Intent i = new Intent();
                     i.setAction(Intent.ACTION_CALL);

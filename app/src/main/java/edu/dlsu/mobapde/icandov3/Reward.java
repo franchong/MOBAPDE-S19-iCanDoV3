@@ -20,7 +20,8 @@ public class Reward {
 
     public Reward(){}
 
-    public Reward(String title, String description, int points, boolean isRepeatable) {
+    public Reward(long id, String title, String description, int points, boolean isRepeatable) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.points = points;
