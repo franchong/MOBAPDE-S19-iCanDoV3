@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -24,7 +23,7 @@ public class AddEditTaskMenu extends AppCompatActivity {
     ProgressBar pgLevel;
     TextView tvDate;
     ImageView ivRecurring, ivDate;
-    Button btnCancel, btnSave;
+    Button btnCancel, btnSave, btnDelete;
     EditText etName, etDescription;
     DatabaseHelper dbHelper;
 
@@ -44,6 +43,7 @@ public class AddEditTaskMenu extends AppCompatActivity {
         ivDate = (ImageView) findViewById(R.id.iv_date);
         btnCancel = (Button) findViewById(R.id.button_cancel);
         btnSave = (Button) findViewById(R.id.button_save);
+        btnDelete = (Button) findViewById(R.id.button_delete);
 
         ivRecurring = (ImageView) findViewById(R.id.iv_recurring);
         tvDate = (TextView) findViewById(R.id.tv_date);
@@ -53,6 +53,7 @@ public class AddEditTaskMenu extends AppCompatActivity {
         boolean isEdit = getIntent().getBooleanExtra("isEdit", false);
 
         if (isEdit) {
+            btnDelete.setVisibility(View.VISIBLE);
             boolean isRecurr = getIntent().getBooleanExtra(Task.COLUMN_RECURR, false);
             tvDate.setText(getIntent().getStringExtra(Task.COLUMN_DUEDATE));
             etName.setText(getIntent().getStringExtra(Task.COLUMN_TITLE));
@@ -64,6 +65,9 @@ public class AddEditTaskMenu extends AppCompatActivity {
             else {
                 ivRecurring.setImageResource(R.drawable.nonrecurring);
             }
+        } else {
+            btnDelete.setVisibility(View.GONE);
+            ivRecurring.setTag("nonrecurring");
         }
 
 
@@ -122,8 +126,6 @@ public class AddEditTaskMenu extends AppCompatActivity {
 
         });
 
-        ivRecurring.setTag("nonrecurring");
-
         ivRecurring.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -132,12 +134,12 @@ public class AddEditTaskMenu extends AppCompatActivity {
                 if(ivRecurring.getTag() != null && ivRecurring.getTag().toString().equals("nonrecurring")){
                     ivRecurring.setImageResource(R.drawable.recurring);
                     ivRecurring.setTag("recurring");
-                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Reward is set to recurring.", Snackbar.LENGTH_SHORT);
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Task is set to daily.", Snackbar.LENGTH_SHORT);
                     snackbar.show();
                 } else {
                     ivRecurring.setImageResource(R.drawable.nonrecurring);
                     ivRecurring.setTag("nonrecurring");
-                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Reward is set to nonrecurring.", Snackbar.LENGTH_SHORT);
+                    Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Task is set to once.", Snackbar.LENGTH_SHORT);
                     snackbar.show();
                 }
             }
@@ -175,11 +177,19 @@ public class AddEditTaskMenu extends AppCompatActivity {
                 task.setCategoryID(catergoryID);
                 task.setRecurr(recurring);
 
-                Log.i("LOG EDTADDTASK DATE", tvDate.getText().toString());
-
                 dbHelper.addTask(task);
 
                 setResult(RESULT_OK, data);
+                finish();
+            }
+        });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                long id = getIntent().getLongExtra(Task.COLUMN_ID, 1);
+                dbHelper.deleteTask(id);
                 finish();
             }
         });

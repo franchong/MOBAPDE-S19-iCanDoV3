@@ -106,17 +106,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:background="@drawable/shape_textbox"
-                android:maxLength="130"
+                android:maxLength="220"
                 android:padding="5dp"
                 android:gravity="top"
                 android:textSize="15dp"
-                android:inputType="text"
-                android:singleLine="true"/>
+                android:inputType="text"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="max characters: 130"
+                android:text="max characters: 220"
                 android:textColor="#a6a6a6"
                 android:layout_marginBottom="15dp"
                 android:layout_gravity="right"/>
@@ -152,18 +151,18 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="bottom|right"
-                android:layout_marginTop="45dp">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="45dp"
+                android:layout_gravity="bottom">
 
                 <Button
-                    android:id="@+id/button_cancel"
+                    android:id="@+id/button_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cancel"
+                    android:gravity="center"
+                    android:text="Delete"
                     android:background="@drawable/header_ripple"
                     android:clickable="true"
                     android:textColor="#11ffb6"
@@ -171,17 +170,37 @@
                     android:padding="9dp"
                     android:layout_marginRight="25dp"/>
 
-                <Button
-                    android:id="@+id/button_save"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Save"
-                    android:background="@drawable/header_ripple"
-                    android:clickable="true"
-                    android:textColor="#11ffb6"
-                    android:textSize="15sp"
-                    android:padding="9dp"/>
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="bottom|right">
+
+                    <Button
+                        android:id="@+id/button_cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cancel"
+                        android:background="@drawable/header_ripple"
+                        android:clickable="true"
+                        android:textColor="#11ffb6"
+                        android:textSize="15sp"
+                        android:padding="9dp"
+                        android:layout_marginRight="5dp"/>
+
+                    <Button
+                        android:id="@+id/button_save"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Save"
+                        android:background="@drawable/header_ripple"
+                        android:clickable="true"
+                        android:textColor="#11ffb6"
+                        android:textSize="15sp"
+                        android:padding="9dp"/>
+                </LinearLayout>
+
+            </RelativeLayout>
 
         </LinearLayout>
 

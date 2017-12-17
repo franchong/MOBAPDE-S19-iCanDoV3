@@ -79,7 +79,6 @@ public class RewardListActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(getBaseContext());
 
-
         rewardAdapter = new RewardAdapter(getBaseContext(), dbHelper.getAllRewardCursor());
 
         rewardAdapter.setOnItemClickListener(new RewardAdapter.OnItemClickListener() {
@@ -98,13 +97,6 @@ public class RewardListActivity extends AppCompatActivity {
         });
 
         rvRewards.setAdapter(rewardAdapter);
-
-        rvRewards.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
 
         rvRewards.setLayoutManager(new LinearLayoutManager(
                 getBaseContext(), LinearLayoutManager.VERTICAL, false
@@ -166,11 +158,11 @@ public class RewardListActivity extends AppCompatActivity {
     public void update(boolean purchased) {
         rewardAdapter.changeCursor(dbHelper.getAllRewardCursor());
         if (purchased) {
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Congratulations, You have purchased a reward", Snackbar.LENGTH_SHORT);
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Congratulations, You have purchased a reward!", Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
         else {
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "You need more points for this reward", Snackbar.LENGTH_SHORT);
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "You need more points for this reward.", Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
 

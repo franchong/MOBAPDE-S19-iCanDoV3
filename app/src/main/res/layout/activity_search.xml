@@ -45,11 +45,10 @@
                 android:layout_marginTop="10dp" />
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/rl_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_alignBottom="@+id/rl_header"
             android:background="#283847"
             android:padding="15dp"
@@ -61,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/header_ripple"
                 android:clickable="true"
+                android:layout_alignParentLeft="true"
                 android:orientation="vertical"
                 android:layout_centerVertical="true"
                 android:padding="10dp">
@@ -80,6 +80,7 @@
                 android:layout_width="250dp"
                 android:layout_height="40dp"
                 android:background="@drawable/shape_textbox"
+                android:layout_toLeftOf="@id/ll_search"
                 android:gravity="center|left"
                 android:layout_centerVertical="true"
                 android:paddingLeft="10dp"
@@ -98,6 +99,7 @@
                 android:clickable="true"
                 android:orientation="vertical"
                 android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
                 android:padding="10dp">
 
                 <ImageView
@@ -108,7 +110,7 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"

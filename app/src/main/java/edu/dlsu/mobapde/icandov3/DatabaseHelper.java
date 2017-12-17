@@ -91,8 +91,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(Task.COLUMN_TITLE, task.getTitle());
         contentValues.put(Task.COLUMN_DESC, task.getDescription());
-        contentValues.put(Task.COLUMN_DUEDATE, String.valueOf(task.getDuedate()));
-        contentValues.put(Task.COLUMN_CREATIONDATE, String.valueOf(task.getCreatedate()));
+        contentValues.put(Task.COLUMN_DUEDATE, task.getDuedate());
+        contentValues.put(Task.COLUMN_CREATIONDATE, task.getCreatedate());
         contentValues.put(Task.COLUMN_CAT, task.getCategoryID());
         contentValues.put(Task.COLUMN_RECURR, task.isRecurr());
 

@@ -11,6 +11,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -95,15 +96,14 @@ public class TaskListActivity extends AppCompatActivity {
             }
         });
 
-        rvTasks = findViewById(R.id.rv_tasks);
-
         final ArrayList<Task> tasks = new ArrayList<>();
+
+        rvTasks = findViewById(R.id.rv_tasks);
 
         ta = new TaskAdapter(getBaseContext(), db.getAllTasksCursor(categoryid));
         ta.setOnItemClickListener(new TaskAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(long r) {
-
                 Bundle bundle = new Bundle();
                 bundle.putLong("id_", r);
 
@@ -113,18 +113,14 @@ public class TaskListActivity extends AppCompatActivity {
                 sd.show(getFragmentManager(), "");
             }
         });
-        rvTasks.setAdapter(ta);
 
-        rvTasks.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
 
         rvTasks.setLayoutManager(new LinearLayoutManager(
                 getBaseContext(), LinearLayoutManager.VERTICAL, false
         ));
+
+        rvTasks.setAdapter(ta);
+
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
 
@@ -166,21 +162,27 @@ public class TaskListActivity extends AppCompatActivity {
                         tvLevel.setText("Level " + Integer.toString(currentLevel));
                         pgLevel.setProgress(currentPoints);
 
-                        int position = viewHolder.getAdapterPosition();
-                        tasks.remove(position);
-                        ta.notifyDataSetChanged();
+                        //Log.i("LOG viewholder", String.valueOf(viewHolder.getAdapterPosition()));
+                        //Log.i("LOG viewholderID", String.valueOf(viewHolder.itemView.getTag()));
+
+                        db.deleteTask((Long) viewHolder.itemView.getTag());
                         dialog.dismiss();
 
-                        AlertDialog alertDialog = new AlertDialog.Builder(TaskListActivity.this).create();
-                        alertDialog.setTitle("Rewards");
-                        alertDialog.setMessage("You earned 5 points!");
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        alertDialog.show();
+
+//                        int position = viewHolder.getAdapterPosition();
+//                        tasks.remove(position);
+//                        ta.notifyDataSetChanged();
+//                        AlertDialog alertDialog = new AlertDialog.Builder(TaskListActivity.this).create();
+//                        alertDialog.setTitle("Rewards");
+//                        alertDialog.setMessage("You earned 5 points!");
+//                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                                new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.dismiss();
+//                                    }
+//                                });
+//                        alertDialog.show();
+
 
                     }
                 });
@@ -260,6 +262,28 @@ public class TaskListActivity extends AppCompatActivity {
         pgLevel.setProgress(currentPoints);
     }
 
+    public void update() {
+        ta.changeCursor(db.getAllRewardCursor());
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Congratulations, You have completed a task!", Snackbar.LENGTH_SHORT);
+        snackbar.show();
+
+        //TODO User Points
+        int currentPoints, currentLevel;
+
+        tvPoints = findViewById(R.id.tv_points);
+        tvLevel = findViewById(R.id.tv_level);
+
+        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor dspEditor = dsp.edit();
+
+        currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
+        currentLevel = dsp.getInt(User.COLUMN_LEVEL, -1);
+
+        tvPoints.setText(Integer.toString(currentPoints));
+        tvLevel.setText("Level " + Integer.toString(currentLevel));
+        pgLevel.setProgress(currentPoints);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -305,5 +329,21 @@ public class TaskListActivity extends AppCompatActivity {
 
         Log.d("TAG", prio + " " + ord);
         ta.changeCursor(db.getAllTasksCursor(prio, ord, categoryid));
+
+        //TODO User Points
+        int currentPoints, currentLevel;
+
+        tvPoints = findViewById(R.id.tv_points);
+        tvLevel = findViewById(R.id.tv_level);
+
+        SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor dspEditor = dsp.edit();
+
+        currentPoints = dsp.getInt(User.COLUMN_POINTS, -1);
+        currentLevel = dsp.getInt(User.COLUMN_LEVEL, -1);
+
+        tvPoints.setText(Integer.toString(currentPoints));
+        tvLevel.setText("Level " + Integer.toString(currentLevel));
+        pgLevel.setProgress(currentPoints);
     }
 }

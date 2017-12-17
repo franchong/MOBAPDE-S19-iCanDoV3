@@ -83,8 +83,6 @@ public class ViewRewardMenu extends DialogFragment {
                             ((RewardListActivity)getActivity()).update(false);
                         }
 
-
-
                         dismiss();
                     }
                 })
@@ -101,13 +99,6 @@ public class ViewRewardMenu extends DialogFragment {
                         intent.putExtra(Reward.COLUMN_POINTS, points);
                         intent.putExtra(Reward.COLUMN_REPEATABLE, isRepeatable);
                         startActivityForResult(intent, 15);
-                    }
-                })
-                .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        db.deleteReward(id);
-                        ((RewardListActivity)getActivity()).update(false);
                     }
                 });
 

@@ -4,27 +4,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.support.design.widget.CoordinatorLayout;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 public class AddEditRewardMenu extends AppCompatActivity {
 
     ProgressBar pgLevel;
     ImageView ivRepeatable;
     EditText etName, etDescription, etPoints;
-    Button buttonCancel, buttonSave;
+    Button buttonCancel, buttonSave, buttonDelete;
     AlertDialog alertDialog;
     DatabaseHelper dbHelper;
 
@@ -45,6 +42,7 @@ public class AddEditRewardMenu extends AppCompatActivity {
         etPoints       = findViewById(R.id.et_points);
         buttonCancel   = findViewById(R.id.button_cancel);
         buttonSave     = findViewById(R.id.button_save);
+        buttonDelete   = findViewById(R.id.button_delete);
         ivRepeatable   = findViewById(R.id.iv_repeatable);
 
         dbHelper = new DatabaseHelper(getBaseContext());
@@ -52,6 +50,7 @@ public class AddEditRewardMenu extends AppCompatActivity {
 
         if (isEdit) {
 
+            buttonDelete.setVisibility(View.VISIBLE);
             etName.setText(getIntent().getStringExtra(Reward.COLUMN_TITLE));
             etDescription.setText(getIntent().getStringExtra(Reward.COLUMN_DESC));
             int p = getIntent().getIntExtra(Reward.COLUMN_POINTS, 0);
@@ -69,6 +68,7 @@ public class AddEditRewardMenu extends AppCompatActivity {
 
         } else {
 
+            buttonDelete.setVisibility(View.GONE);
             ivRepeatable.setTag("false");
 
         }
@@ -155,6 +155,15 @@ public class AddEditRewardMenu extends AppCompatActivity {
                     alertDialog.show();
 
                 }
+            }
+        });
+
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                long id = getIntent().getLongExtra("id_", 1);
+                dbHelper.deleteReward(id);
+                finish();
             }
         });
 

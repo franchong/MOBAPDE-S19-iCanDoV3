@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class ViewTaskMenu extends DialogFragment {
 
@@ -34,19 +35,18 @@ public class ViewTaskMenu extends DialogFragment {
 
         final DatabaseHelper db = new DatabaseHelper(v.getContext());
 
-
         tvTaskName = (TextView) v.findViewById(R.id.tv_taskname);
-        tvDaysLeft = (TextView) v.findViewById(R.id.tv_daysleft);
-        tvDay = (TextView) v.findViewById(R.id.tv_day);
-        tvDuedate = (TextView) v.findViewById(R.id.tv_duedate);
         tvDescription = (TextView) v.findViewById(R.id.tv_description);
-        ivRecurr = (ImageView) v.findViewById(R.id.ivRecurr) ;
+        ivRecurr = (ImageView) v.findViewById(R.id.ivRecurr);
+        tvDaysLeft = (TextView) v.findViewById(R.id.tv_daysleft);
+        tvDuedate = (TextView) v.findViewById(R.id.tv_duedate);
+        tvDay = (TextView) v.findViewById(R.id.tv_day);
 
         Bundle bundle = this.getArguments();
         final long id = bundle.getLong("id_");
 
         Task task = db.getTask(id);
-        //if (bundle != null) {
+
         final String title = task.getTitle();
         final String description = task.getDescription();
         final String strDuedate = task.getDuedate();
@@ -54,39 +54,55 @@ public class ViewTaskMenu extends DialogFragment {
         final long categoryID = task.getCategoryID();
         final boolean isRecurr = task.isRecurr();
 
+        //Log.i("LOG duedate", strDuedate);
+
         tvTaskName.setText(title);
-
-        Date endDateValue = null;
-        String strEndDate = strDuedate;
-        SimpleDateFormat df = new SimpleDateFormat("MM-dd-yy");
-        try {
-            endDateValue = df.parse(strEndDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        final Date startDateValue = Calendar.getInstance().getTime();
-        /*
-        long diff = endDateValue.getTime()
-                - startDateValue.getTime();
-        int days = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-        tvDaysLeft.setText(days);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
-        String dayOfTheWeek = sdf.format(endDateValue);
-
-        tvDay.setText(dayOfTheWeek);
-        */
-        tvDuedate.setText(strDuedate);
-
         tvDescription.setText(description);
 
         if (!isRecurr) {
-            ivRecurr.setImageResource(android.R.color.transparent);
+            ivRecurr.setImageResource(R.drawable.nonrecurring);
         }
         else if (isRecurr) {
             ivRecurr.setImageResource(R.drawable.recurring);
         }
-        //}
+
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+
+        Date endDateValue = null;
+        try {
+            endDateValue = df.parse(strDuedate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Date today = Calendar.getInstance().getTime();
+        Date startDateValue = today;
+        String strToday = df.format(today);
+
+        long diff = endDateValue.getTime() - startDateValue.getTime();
+        long daysLeft = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + 1;
+
+        if (strDuedate.equals(strToday)) {
+            daysLeft = 0;
+        }
+
+        //Log.i("LOG daysleft", Long.toString(daysLeft));
+
+        if (daysLeft == 0) {
+            tvDaysLeft.setText("Today");
+        }
+        else if (daysLeft == 1) {
+            tvDaysLeft.setText("Tomorrow");
+        }
+        else {
+            tvDaysLeft.setText(Long.toString(daysLeft) + " days from now");
+        }
+
+        tvDuedate.setText(strDuedate);
+
+        String dayOfWeek = sdf.format(endDateValue);
+        tvDay.setText(dayOfWeek);
 
         AlertDialog.Builder builder
                 = new AlertDialog.Builder(getActivity())
@@ -103,7 +119,6 @@ public class ViewTaskMenu extends DialogFragment {
                                     categoryID, isRecurr);
                             db.addTask(t);
                             db.deleteTask(id);
-                            //TODO how to notify/update adapter
                         }
                         else {
                             db.deleteTask(id);
@@ -111,7 +126,6 @@ public class ViewTaskMenu extends DialogFragment {
 
                         //TODO User Points
                         int currentPoints, currentLevel;
-
 
                         //TODO made V as final
                         SharedPreferences dsp = PreferenceManager.getDefaultSharedPreferences(v.getContext());
@@ -130,6 +144,8 @@ public class ViewTaskMenu extends DialogFragment {
 
                         Log.i("LOG actual points", String.valueOf(dsp.getInt(User.COLUMN_POINTS, -1)));
                         Log.i("LOG actual level", String.valueOf(dsp.getInt(User.COLUMN_LEVEL, -1)));
+
+                        ((TaskListActivity)getActivity()).update();
 
                         dismiss();
                     }
@@ -150,12 +166,6 @@ public class ViewTaskMenu extends DialogFragment {
                         intent.putExtra(Task.COLUMN_RECURR, isRecurr);
                         startActivityForResult(intent, 8);
                         //TODO concern for activities transition, might need onActivityResult
-                    }
-                })
-                .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        db.deleteTask(id);
                     }
                 });
 
